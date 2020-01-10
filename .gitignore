@@ -1,41 +1,11 @@
-
-# Created by https://www.gitignore.io/api/angular,eclipse
-# Edit at https://www.gitignore.io/?templates=angular,eclipse
-
-### Angular ###
-## Angular ##
-# compiled output
-dist/
-tmp/
-app/**/*.js
-app/**/*.js.map
-
-# dependencies
-node_modules/
-bower_components/
-
-# IDEs and editors
-.idea/
-
-# misc
-.sass-cache/
-connect.lock/
-coverage/
-libpeerconnection.log/
-npm-debug.log
-testem.log
-typings/
-
-# e2e
-e2e/*.js
-e2e/*.map
-
-#System Files
-.DS_Store/
+# Created by https://www.gitignore.io/api/eclipse
+# Edit at https://www.gitignore.io/?templates=eclipse
 
 ### Eclipse ###
+
 .metadata
 bin/
+tmp/
 *.tmp
 *.bak
 *.swp
@@ -101,4 +71,37 @@ local.properties
 
 .sts4-cache/
 
-# End of https://www.gitignore.io/api/angular,eclipse
+# End of https://www.gitignore.io/api/eclipse
+
+### Angular ###
+## Angular ##
+# compiled output
+/dist
+/tmp
+/app/**/*.js
+/app/**/*.js.map
+
+# dependencies
+/node_modules
+/bower_components
+
+# IDEs and editors
+/.idea
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage/*
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+
+#System Files
+.DS_Store
+
+# End of https://www.gitignore.io/api/angular
