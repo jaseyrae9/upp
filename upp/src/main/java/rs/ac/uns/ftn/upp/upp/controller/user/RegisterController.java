@@ -82,13 +82,12 @@ public class RegisterController {
 	private AcademicFieldService academicFieldService;
 
 	/**
-	 * Uzimamo prvi user task iz bpmn modela i polja forme tog user taska, zatim ta
-	 * polja saljemo frontu.
+	 * Pokrece se proces (kad se klikne dugme u navbaru registracija)
+	 * i uzima prvi user task iz bpmn modela i polja forme tog user taska, zatim ta polja saljemo frontu.	 *  
 	 * 
 	 * @return formfield dto za front
 	 */
-	// saljemo formu za user task na front -> kad se klikne dugme u navbaru
-	// registracija
+	
 	@GetMapping(path = "/get", produces = "application/json")
 	public @ResponseBody FormFieldsDTO get() {
 		System.err.println("U kontroleru za slanje forme");
@@ -96,7 +95,6 @@ public class RegisterController {
 		System.err.println("pii: " + pi.getProcessInstanceId());
 		// uzimamo prvi task
 		Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).list().get(0);
-		System.err.println("velicina: " + taskService.createTaskQuery().processInstanceId(pi.getId()).list().size());
 		// za taj task daj mi formu
 		TaskFormData tfd = formService.getTaskFormData(task.getId());
 
@@ -106,41 +104,42 @@ public class RegisterController {
 			System.out.println(fp.getId() + fp.getType());
 		}
 
-		// pravi dto u koji smesti taj task id, process instance id i te propertis
-		// odnosno te form fieldove i to se salje na front
+		// pravi dto u koji smesti taj task id, process instance id i te form fieldove i to se salje na front
 		return new FormFieldsDTO(task.getId(), pi.getId(), properties);
 	}
 
-	// registracija korisnika endpoint - completujemo user task za unos podataka da
-	// -> kad se klikne dugme iz forme za registraciju
-	// bi nastavili dalje
-	// salju nam se podaci sa fronta
+	
+	/**
+	 * Registracija korisnika endpoint, complituje se user task za unos podataka, klikom na dugme iz forme za registraiju,
+	 * da bi nastavili dalje.
+	 * 
+	 * @param dto podaci za registraciju
+	 * @param taskId id taska koji se submituje
+	 * @return
+	 */
 	@PostMapping(path = "/post/{taskId}", produces = "application/json")
-	public @ResponseBody ResponseEntity<?> post(@RequestBody List<FormSubmissionDTO> dto, @PathVariable String taskId) {
+	public @ResponseBody ResponseEntity<?> post(@Valid @RequestBody List<FormSubmissionDTO> dto, @PathVariable String taskId) {
 		System.err.println("registracija korisnika endpoint: ");
 
 		HashMap<String, Object> map = this.mapListToDto(dto);
 
-		Task task = taskService.createTaskQuery().taskId(taskId).singleResult(); // single result jer ce dati ili null
-																					// ili task sa tim id-om
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult(); // single result jer ce dati ili null ili task sa tim id-om
 		System.err.println("task name: " + task.getName());
 		String processInstanceId = task.getProcessInstanceId(); // iz taska izvlacimo proces instance id
 		System.err.println("processInstanceId: " + processInstanceId.toString());
 
-		// ocemo da postavimo procesnu variablu bas na taj proces instance id iz kojeg
-		// je taj task protekao
-		// za taj process instance
+		// ocemo da postavimo procesnu variablu bas na taj processInstanceId iz kojeg je taj task protekao
 		// registration se zove variabla
 		// stavi taj dto koji je korisnik poslao
 		runtimeService.setVariable(processInstanceId, "registration", dto); // u registration variablu smo stavili dto
 
-		// submituj task form, ako smo stavljali validacije u bpmn modelu, puce ako nije
-		// ispostovana validacija
-		// mozemo tu parcijalnu validaciju hendlovati ovde pre nego sto complitujemo
-		// task
-		// try catch ako vrisne vrati nazad
-	
-		formService.submitTaskForm(taskId, map);
+//		try {
+			formService.submitTaskForm(taskId, map);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//		}	
 	
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
