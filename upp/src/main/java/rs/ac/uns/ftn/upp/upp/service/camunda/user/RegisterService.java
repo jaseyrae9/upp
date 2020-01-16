@@ -43,7 +43,6 @@ public class RegisterService implements JavaDelegate {
 	
 	@Autowired
 	private VerificationTokenService tokenService;
-
 	
 	// ovo je servisni task za kreiranje korisnika, da ga sacuva u bazi
 	@Override
@@ -105,10 +104,9 @@ public class RegisterService implements JavaDelegate {
 		
 		String executionId = execution.getId();
 		System.err.println("execution id " + executionId );
-		// pokusaj za mejl
 		
+		// pokusaj za mejl		
 		confirmRegistration(customer, executionId);
-
 		
 	}
 	
@@ -133,7 +131,7 @@ public class RegisterService implements JavaDelegate {
 		System.err.println("mmejl: " + recipientMail);
 		String subject = "Potvrda registracije";
 		String confirmationUrl = "http://localhost:8080/register/confirmRegistration/" + executionId + "?token=" + token;
-		String message = "<html><body>Click here to activate your account<br>" + confirmationUrl + "</body></html>";
+		String message = "<html><body>Kliknite ovde kako biste aktivirali nalog<br>" + confirmationUrl + "</body></html>";
 		emailService.sendNotificaitionAsync(recipientMail, subject, message);
 	}
 	

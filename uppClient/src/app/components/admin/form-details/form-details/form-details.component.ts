@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { RepositoryService } from 'src/app/services/repository.service';
 import { AdminService } from 'src/app/services/admin/admin.service';
 import { NgSelectComponent } from '@ng-select/ng-select';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-form-details',
@@ -20,6 +21,7 @@ export class FormDetailsComponent implements OnInit {
   private names = [];
   private enumerations = [];
   private enumerationsValues = [];
+  errorMessage: String = '';
 
   constructor(private repositoryService: RepositoryService,
               private adminService: AdminService) { }
@@ -46,9 +48,10 @@ export class FormDetailsComponent implements OnInit {
           }
         });
       },
-      err => {
+      (err: HttpErrorResponse) => {
         console.log('Error occured');
-        console.log(err);
+        console.log('err: ', err);
+        this.errorMessage = err.error.message;
       }
     );
 
@@ -68,12 +71,13 @@ export class FormDetailsComponent implements OnInit {
       this.adminService.decide(o, this.formFieldsDto.taskId).subscribe(
         res => {
           console.log(res);
-          alert('Odlucio si!');
-         //  window.location.reload();
+          alert('Upešno ste doneli odluku.');
+          window.location.reload();
         },
-        err => {
+        (err: HttpErrorResponse) => {
           console.log('Error occured');
-          console.log(err);
+          console.log('err: ', err);
+          this.errorMessage = err.error.message;
         }
       );
   }

@@ -54,9 +54,11 @@ export class NewJournalComponent implements OnInit {
           }
         });
       },
-      err => {
-        console.log('Error occured');
-        console.log(err);
+      (err: HttpErrorResponse) => {
+        console.log('error prilikom starta procesa za dodavanje casopisa');
+        console.log('err: ', err);
+        this.errorMessage = err.error.message;
+
       }
     );
    }
@@ -81,11 +83,14 @@ export class NewJournalComponent implements OnInit {
             const tokenPayload: TokenPayload = decode(data.token);
             this.tokenStorage.saveRoles(tokenPayload.roles);
             console.log(tokenPayload);
+            alert('Uspešno ste dodali časopis!');
             this.router.navigate(['']);
         },
-        error => {
-          console.log('error -> ', error);
-          // this.errorMessage = error.error.details;
+        (err: HttpErrorResponse) => {
+          console.log('Error prilikom dodavanje casopisa');
+          console.log('err: ', err);
+          this.errorMessage = err.error.message;
+
         }
       );
   }

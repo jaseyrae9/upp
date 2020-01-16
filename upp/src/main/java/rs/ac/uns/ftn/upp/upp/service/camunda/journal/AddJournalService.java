@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rs.ac.uns.ftn.upp.upp.dto.FormSubmissionDTO;
+import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
+import rs.ac.uns.ftn.upp.upp.exceptions.RequestDataException;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
 import rs.ac.uns.ftn.upp.upp.model.Journal;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
@@ -68,22 +70,22 @@ public class AddJournalService implements JavaDelegate {
 				for(String naucnaOblast : naucneOblasti) {
 					AcademicField academicField = academicFieldService.findByName(naucnaOblast);
 					journal.getJournalAcademicFields().add(academicField);
-				}
-				
-			}			
-
+				}				
+			}		
 		}
 		
 		String starter = (String) execution.getVariable("pokretac");
 		System.err.println("starter->" + starter);
 		Optional<Customer> editorInChief = customerService.findCustomer(starter);
 		if(!editorInChief.isPresent()) {
-			// TODO: exception
-			System.err.println("[addJournalService] nemaa ga");
+			System.err.println("[addJournalService] ne postoji korisnik sa nazivom " + starter);
+			throw new NotFoundException(starter, Customer.class.getSimpleName());
 		}
 		
 		if(editorInChief.get().getJournal() != null) {
 			System.out.println("Ovaj urednik vec ima casopis");
+			throw new RequestDataException("Ovaj urednik već ima časopis.");
+
 		} else {
 			journal.setEditorInChief(editorInChief.get());
 			Journal savedJournal = journalService.saveJournal(journal);

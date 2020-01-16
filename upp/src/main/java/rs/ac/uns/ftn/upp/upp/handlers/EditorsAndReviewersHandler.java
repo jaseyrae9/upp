@@ -17,10 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rs.ac.uns.ftn.upp.upp.dto.FormSubmissionDTO;
+import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
 import rs.ac.uns.ftn.upp.upp.model.Journal;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
-import rs.ac.uns.ftn.upp.upp.model.user.MyUser;
 import rs.ac.uns.ftn.upp.upp.model.user.security.Authority;
 import rs.ac.uns.ftn.upp.upp.repository.AcademicFieldRepository;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.JournalService;
@@ -30,9 +30,6 @@ import rs.ac.uns.ftn.upp.upp.service.entityservice.user.security.AuthorityServic
 
 @Service
 public class EditorsAndReviewersHandler implements TaskListener {
-	
-	@Autowired
-	private AcademicFieldRepository academicFieldRepository;
 	
 	@Autowired
 	private FormService formService;
@@ -66,8 +63,7 @@ public class EditorsAndReviewersHandler implements TaskListener {
 				
 				Optional<Journal> journal = journalService.findJournalByName(journalName);
 				if(!journal.isPresent()) {
-					// TODO: exception
-					System.err.println("ne postoji casopis sa zadatim imenom");
+					System.err.println("nema casopisa sa imenom: " + journalName);
 				}
 				afs.addAll(journal.get().getJournalAcademicFields());
 			}

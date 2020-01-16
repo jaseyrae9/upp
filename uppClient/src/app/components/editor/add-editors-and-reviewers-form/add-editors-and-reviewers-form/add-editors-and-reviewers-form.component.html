@@ -24,12 +24,6 @@
               <input type="checkbox" name="{{ field.id }}" ngModel *ngIf="field.type.name == 'boolean'" class="form-control custom-box" />
               <input placeholder="{{ field.label }}" type="number" name="{{ field.id }}" ngModel *ngIf="field.type.name == 'long'" class="form-control" />
 
-              <!--
- 				<ng-select *ngIf="field.type.name=='enum' && field.id=='uredniciNaucnihOblasti'" name={{field.id}} ngModel [multiple]="true" [searchable]="true" [items]="enumValues" bindValue="enumKeys" bindLabel="enumValues" placeholder="{{field.label}}" > </ng-select>
-                
-                <ng-select *ngIf="field.type.name=='enum' && field.id=='recenzentiNaucnihOblasti'" name={{field.id}} ngModel [multiple]="true" [searchable]="true" [items]="enumValues2" bindValue="enumKeys2" bindLabel="enumValues2" placeholder="{{field.label}}" > </ng-select>   
-                 
-				 -->
             </div>
 
             <div *ngFor="let item of enumerations; index as i" class="form-group" >
@@ -38,6 +32,7 @@
             </div>
 
             <button type="submit" class="subscribe btn btn-primary btn-block shadow-sm"> Izaberi </button>
+            <br/>
             <div class="alert alert-danger" role="alert" *ngIf="errorMessage.length != 0" >
               {{ errorMessage }}
             </div>

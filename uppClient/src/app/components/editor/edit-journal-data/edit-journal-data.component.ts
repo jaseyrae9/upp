@@ -14,8 +14,6 @@ export class EditJournalDataComponent implements OnInit {
   private enumKeys = [];
   private enumValues = [];
   errorMessage: String = '';
-  private enumKeys2 = [];
-  private enumValues2 = [];
 
   private labels = [];
   private names = [];
@@ -46,9 +44,11 @@ export class EditJournalDataComponent implements OnInit {
         });
         }
       },
-      err => {
-        console.log('Error occured');
+      (err: HttpErrorResponse) => {
+        console.log('Error se desio prilikom ucitavanja forme za izmenu casopisa');
         console.log(err);
+        this.errorMessage = err.error.message;
+
       }
     );
   }
@@ -78,10 +78,9 @@ export class EditJournalDataComponent implements OnInit {
           alert('Uspešno ste izmenili casopis, ceka se odobrenje admina!');
         },
         (err: HttpErrorResponse) => {
-          console.log('Error occured');
+          console.log('Error se desio prilikom izmene casopisa.');
           console.log(err);
           this.errorMessage = err.error.message;
-
         }
       );
   }

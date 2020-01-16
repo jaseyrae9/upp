@@ -1,3 +1,6 @@
+<div *ngIf="tasks.length == 0" class="text-center pt-2">
+      <p >Trenutno ne postoji ni jedan zadatak.</p>
+  </div>
 
 <div *ngFor="let task of tasks" class="row pt-4 justify-content-md-center">
   <app-form-details [taskId]='task.taskId' ></app-form-details>

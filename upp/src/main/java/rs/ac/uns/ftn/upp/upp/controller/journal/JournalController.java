@@ -17,9 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +29,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import rs.ac.uns.ftn.upp.upp.dto.FormFieldsDTO;
 import rs.ac.uns.ftn.upp.upp.dto.FormSubmissionDTO;
+import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
+import rs.ac.uns.ftn.upp.upp.exceptions.RequestDataException;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
 import rs.ac.uns.ftn.upp.upp.model.user.AuthenticationResponse;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
@@ -59,9 +59,6 @@ public class JournalController {
 	private CustomerService customerService;
 	
 	@Autowired
-	private AuthenticationManager authenticationManager;
-	
-	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
 
 	@Autowired
@@ -73,8 +70,6 @@ public class JournalController {
 	 * 
 	 * @return formfield dto za front
 	 */
-	// saljemo formu za user task na front -> kad se klikne dugme u navbaru dodaj
-	// casopis
 	@PreAuthorize("hasAnyRole('EDITOR')")
 	@GetMapping(path = "/get", produces = "application/json")
 	public @ResponseBody FormFieldsDTO get(Authentication authentication) {
@@ -83,8 +78,10 @@ public class JournalController {
 
 		ProcessInstance pi = runtimeService.startProcessInstanceByKey("dodavanjeCasopisa");
 		System.err.println("casopis pii: " + pi.getProcessInstanceId());
-		// uzimamo prvi task
+
 		Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).list().get(0);
+		
+		// postavljam onog ko je pokrenuo sistem u variablu pokretac kako bi se naredni taskovi koji kao assignee imaju variablu pokretac zaista dodelili tom korisniku
 		runtimeService.setVariable(pi.getId(), "pokretac", authentication.getName());
 		task.setAssignee(authentication.getName());
 		// za taj task daj mi formu
@@ -97,24 +94,29 @@ public class JournalController {
 		}
 
 		// pravi dto u koji smesti taj task id, process instance id i te propertis
-		// odnosno te form fieldove i to se salje na front
 		return new FormFieldsDTO(task.getId(), pi.getId(), properties);
 	}
 
-	// dodavanje casopisa endpoint - completujemo user task za unos podataka da bi
-	// nastavili dalje
-	// -> kad se klikne dugme iz forme za dodavanje
-	// salju nam se podaci sa fronta
+	/**
+	 * Dodavanje casopisa. Nakon submit-a forme se complete-uje zadatak sto omogucava nastavak procesa.
+	 * @param dto podaci 
+	 * @param taskId id taska koji se complete-uje
+	 * @param authentication korisnik koji je pozvao endpoint
+	 * @param device
+	 * @return
+	 * @throws NotFoundException 
+	 * @throws RequestDataException 
+	 */
 	@PreAuthorize("hasAnyRole('EDITOR')")
 	@PostMapping(path = "/post/{taskId}", produces = "application/json")
 	public @ResponseBody ResponseEntity<?> createJournal(@RequestBody List<FormSubmissionDTO> dto, @PathVariable String taskId,
-			Authentication authentication, Device device) {
-		System.err.println("dodavanje casopisa endpoiny: ");
+			Authentication authentication, Device device) throws NotFoundException, RequestDataException {
+		System.err.println("dodavanje casopisa endpoint: ");
 
 		HashMap<String, Object> map = this.mapListToDto(dto);
-		Task task = taskService.createTaskQuery().taskId(taskId).singleResult(); // single result jer ce dati ili null
-																					// ili task sa tim id-om
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult(); 
 		System.err.println("task name: " + task.getName());
+		
 		String processInstanceId = task.getProcessInstanceId(); // iz taska izvlacimo proces instance id
 		System.err.println("processInstanceId: " + processInstanceId.toString());
 
@@ -122,25 +124,22 @@ public class JournalController {
 		Optional<Customer> opt = customerService.findCustomer(starter);
 		if (!opt.isPresent()) {
 			// TODO: exception
-			System.err.println("[addJournalService] nemaa ga");
+			System.err.println("[addJournalService] nemaa korisnika imenom: "  + starter);
+			throw new NotFoundException(starter, Customer.class.getSimpleName());
+
 		}
 		Customer cust = opt.get();
 		
 		if (cust.getJournal() != null) {
-			System.out.println("Ovaj urednik vec ima casopis");
+			System.err.println("Ovaj urednik već ima časopis.");
+			throw new RequestDataException("Ne možete da kreirate časopis jer već imate jedan časopis.");
 		} else {
-			// ocemo da postavimo procesnu variablu bas na taj proces instance id iz kojeg
-			// je taj task protekao
-			// za taj process instance
-			// registration se zove variabla
-			// stavi taj dto koji je korisnik poslao
 			runtimeService.setVariable(processInstanceId, "casopis", dto); // u casopis variablu smo stavili dto
-
 			// submituj task form
 			formService.submitTaskForm(taskId, map);
-
 		}
-
+		
+		// da bi odmah dobio u tokenu ulogu da je glavni urednik
 		// Kreiraj token
 		UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(cust.getUsername());
 		String token = this.tokenUtils.generateToken(userDetails, device);
@@ -149,27 +148,25 @@ public class JournalController {
 		return ResponseEntity.ok(new AuthenticationResponse(token));
 	}
 
-	/**
-	 * Uzimamo prvi user task iz bpmn modela i polja forme tog user taska, zatim ta
-	 * polja saljemo frontu.
+	/** Preuzimanje forme za dodavanje uredjivackog odbora.
+	 * 
 	 * 
 	 * @return formfield dto za front
+	 * @throws RequestDataException 
 	 */
-	// saljemo formu za user task na front -> kad se klikne dugme u navbaru za
-	// odabir urednika i recenzenata
-	@PreAuthorize("hasAnyRole('EDITOR')")
+	@PreAuthorize("hasAnyRole('EDITORINCHIEF')")
 	@GetMapping(path = "/getForm", produces = "application/json")
-	public @ResponseBody FormFieldsDTO getSecondUserTaskForm(Authentication authentication) {
+	public @ResponseBody FormFieldsDTO getAddEditorsAndReviewersTaskForm(Authentication authentication) throws RequestDataException {
 		System.err.println("U kontroleru za slanje forme za odabir recenzenata i urednika");
 		System.out.println("2IME POKRETACA PROCESA: " + authentication.getName());
 
-		Task task = taskService.createTaskQuery().taskAssignee(authentication.getName()).singleResult();
+		Task task = taskService.createTaskQuery().taskAssignee(authentication.getName()).singleResult();		
 		
-		
-		if(!task.getName().trim().contentEquals("dodavanje uredjivackog odbora")) {
+		if(!task.getName().trim().contentEquals("dodavanje uredjivackog odbora")) {			
 			System.out.println("GRESKA: Trenutno nema taska za dodavanje urednika i recezenata");
-			return null;
+			throw new RequestDataException("Trenutno nema taska za dodavanje urednika i recezenata.");
 		}
+		
 		System.out.println("Task name: " + task.getName());
 		System.out.println("Task id: " + task.getId());
 		System.err.println("pokretacc variabla: " + runtimeService.getVariable(task.getProcessInstanceId(), "pokretac"));
@@ -181,35 +178,44 @@ public class JournalController {
 		return new FormFieldsDTO(task.getId(), task.getProcessInstanceId(), properties);
 	}
 	
-	@PreAuthorize("hasAnyRole('EDITOR')")
+	/** Preuzimanje forme za izmenu podataka o casopisu.
+	 * 
+	 * @param authentication
+	 * @return
+	 * @throws RequestDataException
+	 */
+	@PreAuthorize("hasAnyRole('EDITORINCHIEF')")
 	@GetMapping(path = "/getEditJournalForm", produces = "application/json")
-	public @ResponseBody FormFieldsDTO getEditJournalForm(Authentication authentication) {
+	public @ResponseBody FormFieldsDTO getEditJournalForm(Authentication authentication) throws RequestDataException {
 		System.err.println("DEBUG: U kontroleru getEditJournalForm");
 		Task task = taskService.createTaskQuery().taskAssignee(authentication.getName()).singleResult();
 		
 		
 		if(!task.getName().trim().contentEquals("editor menja podatke")) {
 			System.out.println("GRESKA: Trenutno nema taska za promenu podataka casopisa");
-			return null;
+			throw new RequestDataException("Trenutno nema taska za promenu podataka časopisa.");
 		}
-		System.out.println("Task name: " + task.getName());
-		System.out.println("Task id: " + task.getId());
-		System.err.println("pokretacc variabla: " + runtimeService.getVariable(task.getProcessInstanceId(), "pokretac"));
-
+		
 		TaskFormData tfd = formService.getTaskFormData(task.getId());
 		List<FormField> properties = tfd.getFormFields();
 		
 		return new FormFieldsDTO(task.getId(), task.getProcessInstanceId(), properties);
 	}
 
-	// dodavanje casopisa endpoint - completujemo user task za unos podataka da bi
-	// nastavili dalje
-	// -> kad se klikne dugme iz forme za dodavanje
-	// salju nam se podaci sa fronta
-	@PreAuthorize("hasAnyRole('EDITOR')")
+	/**
+	 * Dodavanje urednika i recenzenata naucnih oblasti casopisa end point.
+	 * Nakon submit-a forme se complete-uje zadatak što omogućava nastavak procesa. 
+	 * 
+	 * @param dto
+	 * @param taskId
+	 * @param authentication
+	 * @return
+	 * @throws RequestDataException 
+	 */
+	@PreAuthorize("hasAnyRole('EDITORINCHIEF')")
 	@PostMapping(path = "/addEditorsAndReviewers/{taskId}", produces = "application/json")
 	public @ResponseBody ResponseEntity<?> addEditorsAndReviewers(@RequestBody List<FormSubmissionDTO> dto,
-			@PathVariable String taskId, Authentication authentication) {
+			@PathVariable String taskId, Authentication authentication) throws RequestDataException {
 		System.err.println("addEditorsAndReviewers endpoint: ");
 
 		// Proveravamo da li je izabrao barem 2 recenzenta
@@ -219,19 +225,20 @@ public class JournalController {
 				List<String> listTemp = (List<String>) temp.getFieldValue();
 				if(listTemp.size() < 2) {
 					System.out.println("DEBUG: Nisu izabrana bar 2 recenzenta");
-					// TODO: error
+					throw new RequestDataException("Morate izabrati makar dva recenzenta.");
 				}
 			}
 		}
 		
 		HashMap<String, Object> map = this.mapListToDto2(dto);
-		Task task = taskService.createTaskQuery().taskId(taskId).singleResult(); // single result jer ce dati ili null
-																					// ili task sa tim id-om
+		
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult(); 
 		System.err.println("task name: " + task.getName());
+		
 		String processInstanceId = task.getProcessInstanceId(); // iz taska izvlacimo proces instance id
 		System.err.println("processInstanceId: " + processInstanceId.toString());
 
-		runtimeService.setVariable(processInstanceId, "uredniciIrecenzenti", dto); // u casopis variablu smo stavili dto
+		runtimeService.setVariable(processInstanceId, "uredniciIrecenzenti", dto); // u uredniciIrecenzenti variablu smo stavili dto
 
 		// submituj task form
 		System.out.println(map);
@@ -240,34 +247,25 @@ public class JournalController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasAnyRole('EDITOR')")
+	/**
+	 * Izmena casopisa end point. Nakon submit-a forme se complete-uje zadatak što omogućava nastavak procesa.
+	 * @param dto
+	 * @param taskId
+	 * @param authentication
+	 * @return
+	 */
+	@PreAuthorize("hasAnyRole('EDITORINCHIEF')")
 	@PostMapping(path = "/editJournal/{taskId}", produces = "application/json")
 	public @ResponseBody ResponseEntity<?> editJournal(@RequestBody List<FormSubmissionDTO> dto, @PathVariable String taskId, Authentication authentication) {
-		System.err.println("editJournal endpoint: ");
-
-		// Proveravamo da li je izabrao barem 2 recenzenta
-		/* for (FormSubmissionDTO temp : dto) {
-			if(temp.getFieldId().contentEquals("recenzentiNaucnihOblasti")) {
-				System.out.println("DEBUG: Naisli smo na listu recenzenata");
-				List<String> listTemp = (List<String>) temp.getFieldValue();
-				if(listTemp.size() < 2) {
-					System.out.println("DEBUG: Nisu izabrana bar 2 recenzenta");
-					// TODO: error
-				}
-			}
-		}*/
-		for (FormSubmissionDTO temp : dto) {
-			System.out.println();
-		}
+		System.err.println("editJournal endpoint: ");		
 		
 		HashMap<String, Object> map = this.mapListToDto(dto);
-		Task task = taskService.createTaskQuery().taskId(taskId).singleResult(); // single result jer ce dati ili null
-																					// ili task sa tim id-om
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult(); 
 		System.err.println("task name: " + task.getName());
+		
 		String processInstanceId = task.getProcessInstanceId(); // iz taska izvlacimo proces instance id
 		System.err.println("processInstanceId: " + processInstanceId.toString());
 
-	
 		runtimeService.setVariable(processInstanceId, "izmenjenCasopis", dto); // u casopis variablu smo stavili dto
 
 		// submituj task form

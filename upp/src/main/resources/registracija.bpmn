@@ -85,7 +85,6 @@
         <camunda:formData>
           <camunda:formField id="adminPotvrdio" label="Da li potvrdjujete da ${username} bude recenzent?" type="boolean" />
         </camunda:formData>
-        <camunda:taskListener delegateExpression="${somethingHandler}" event="create" />
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_01ab6bk</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_06inwbh</bpmn:outgoing>

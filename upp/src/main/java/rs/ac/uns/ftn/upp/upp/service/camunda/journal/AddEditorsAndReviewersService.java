@@ -9,32 +9,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rs.ac.uns.ftn.upp.upp.dto.FormSubmissionDTO;
-import rs.ac.uns.ftn.upp.upp.model.AcademicField;
+import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
 import rs.ac.uns.ftn.upp.upp.model.Journal;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
-import rs.ac.uns.ftn.upp.upp.model.user.MembershipFeeMethod;
-import rs.ac.uns.ftn.upp.upp.model.user.security.Authority;
-import rs.ac.uns.ftn.upp.upp.service.entityservice.AcademicFieldService;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.JournalService;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.user.CustomerService;
-import rs.ac.uns.ftn.upp.upp.service.entityservice.user.security.AuthorityService;
 
 @Service
 public class AddEditorsAndReviewersService implements JavaDelegate {
 
 	@Autowired
-	private JournalService journalService;
-	
-	@Autowired
-	private AcademicFieldService academicFieldService;
+	private JournalService journalService;	
 	
 	@Autowired
 	private CustomerService customerService;
 	
-	@Autowired
-	private AuthorityService authorityService;
-	
-	// ovo je servisni task za kreiranje casopisa, da ga sacuva u bazi
+	// servisni task za dodavanje urednika i recenzenata casopisa
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 		System.err.println("usao u AddEditorsAndReviewersService service");
@@ -45,14 +35,13 @@ public class AddEditorsAndReviewersService implements JavaDelegate {
 		List<FormSubmissionDTO> form = (List<FormSubmissionDTO>) execution.getVariable("uredniciIrecenzenti");
 		for (FormSubmissionDTO fp : form) {
 			System.out.println(fp.getFieldId() + " " + fp.getFieldValue());
-		}
-		
+		}		
 		
 		Optional<Journal> opt = journalService.findJournalByName(journalName);
 		
 		if(!opt.isPresent()) {
-			// TODO: exception
-			System.err.println("nemaa to casopisa");
+			System.err.println("nema casopisa sa nazivom: " + journalName);
+			throw new NotFoundException(journalName, Journal.class.getSimpleName());
 		}
 		
 		Journal journal = opt.get();
@@ -82,11 +71,7 @@ public class AddEditorsAndReviewersService implements JavaDelegate {
 		}
 		
 		journalService.saveJournal(journal);
-		System.err.println("izasao iz AddEditorsAndReviewersService sservica");
-		
-		
-		
-		
+		System.err.println("izasao iz AddEditorsAndReviewersService sservica");	
 	}
 	
 	

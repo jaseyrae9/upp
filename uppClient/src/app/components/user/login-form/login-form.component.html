@@ -23,6 +23,10 @@
             </div>
 
             <button type="submit" class="subscribe btn btn-primary btn-block shadow-sm">Prijavi se </button>
+            <br/>
+            <div class="alert alert-danger" role="alert" *ngIf="errorMessage.length != 0" >
+              {{ errorMessage }}
+            </div>
           </form>
         </div>
       </div>

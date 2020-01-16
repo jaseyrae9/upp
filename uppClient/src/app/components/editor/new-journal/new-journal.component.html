@@ -29,6 +29,7 @@
               <ng-select *ngIf="field.type.name == 'enum' && field.id == 'naucneOblasti'" name="{{ field.id }}" ngModel [multiple]="true" [searchable]="true" [items]="enumValues" bindValue="enumKeys" bindLabel="enumValues" placeholder="{{ field.label }}" > </ng-select>
             </div>
             <button type="submit" class="subscribe btn btn-primary btn-block shadow-sm" >Dodaj časopis </button>
+            <br/>
             <div class="alert alert-danger" role="alert" *ngIf="errorMessage.length != 0" >
               {{ errorMessage }}
             </div>

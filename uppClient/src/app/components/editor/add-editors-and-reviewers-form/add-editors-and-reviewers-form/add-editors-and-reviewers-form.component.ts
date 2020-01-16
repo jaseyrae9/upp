@@ -42,9 +42,10 @@ export class AddEditorsAndReviewersFormComponent implements OnInit {
 
         });
       },
-      err => {
-        console.log('Error occured');
-        console.log(err);
+      (err: HttpErrorResponse) => {
+        console.log('Error ucitavanja forme za dodavanje urednika i recenzenata');
+        console.log('err: ', err);
+        this.errorMessage = err.error.message;
       }
     );
 
@@ -73,9 +74,10 @@ export class AddEditorsAndReviewersFormComponent implements OnInit {
         res => {
           console.log('res ', res);
           alert('Uspešno ste izabrali urednike i recenzente!');
+          window.location.reload();
         },
         (err: HttpErrorResponse) => {
-          console.log('Error occured');
+          console.log('Error se desio prilikom odabira urednika i recenzenata');
           console.log(err);
           this.errorMessage = err.error.message;
 

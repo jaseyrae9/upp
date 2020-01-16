@@ -17,15 +17,11 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
 import rs.ac.uns.ftn.upp.upp.model.Journal;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
-import rs.ac.uns.ftn.upp.upp.repository.AcademicFieldRepository;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.JournalService;
 
 @Service
 public class FillChoosenDataHandler implements TaskListener {
-	
-	@Autowired
-	private AcademicFieldRepository academicFieldRepository;
-	
+
 	@Autowired
 	private FormService formService;
 	
@@ -43,7 +39,7 @@ public class FillChoosenDataHandler implements TaskListener {
 		
 		if(!opt.isPresent()) {
 			// TODO: exception
-			System.err.println("nemaa tog casopisa");
+			System.err.println("nema casopisa sa id: " + journalId);
 		}
 		Journal journal = opt.get();
 

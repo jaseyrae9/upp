@@ -21,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -133,14 +134,8 @@ public class RegisterController {
 		// stavi taj dto koji je korisnik poslao
 		runtimeService.setVariable(processInstanceId, "registration", dto); // u registration variablu smo stavili dto
 
-//		try {
-			formService.submitTaskForm(taskId, map);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//		}	
-	
+		formService.submitTaskForm(taskId, map);
+		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -159,9 +154,7 @@ public class RegisterController {
 		System.out.println("pronadjen token-> " + verificationToken.get().getToken());
 		if (!verificationToken.isPresent()) {
 			System.err.println("TODO");
-			// return
-			// ResponseEntity.status(HttpStatus.BAD_REQUEST).header(HttpHeaders.LOCATION,
-			// "https://ticket-reservation21.herokuapp.com/error/404").build();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
 		Customer customer = (Customer) verificationToken.get().getUser();
@@ -171,20 +164,19 @@ public class RegisterController {
 		// omogucavav prelazak dalje
 		MessageCorrelationResult results = runtimeService.createMessageCorrelation("PotvrdaMejla")
 				.processInstanceId(processInstanceId).correlateWithResult();
+		
 		System.err.println("results: " + results);
-
 		System.err.println("izasao potvrde mejla");
 
-		// redirekcija gde zelimo
+		// redirekcija 
 		return ResponseEntity.status(HttpStatus.FOUND).header(HttpHeaders.LOCATION, "http://localhost:4200/login")
 				.build();
 	}
 
+	@SuppressWarnings("unchecked")
 	private HashMap<String, Object> mapListToDto(List<FormSubmissionDTO> list) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		for (FormSubmissionDTO temp : list) {
-			System.err.println("sve " + temp.getFieldId());
-
 			if(temp.getFieldValue() instanceof List) {
 				List<String> listTemp = (List<String>)temp.getFieldValue();
 				if(!listTemp.isEmpty()) {
@@ -231,10 +223,14 @@ public class RegisterController {
 	}
 
 
-	// admin odlucuje endpoint - completujemo user task admin potvrđuje/odbija recenzenta
-	// -> kad se klikne dugme iz forme za odlucivanje
-	// da bi nastavili dalje
-	// salju nam se podaci sa fronta
+	
+	/**
+	 * Admin odlucuje endpoint. Submit formom se complete-uje zadatak i omogucava nastavak procesa.
+	 * @param dto podaci
+	 * @param taskId id taska koji se submituje
+	 * @return
+	 */
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@PostMapping(path = "/decide/{taskId}", produces = "application/json")
 	public @ResponseBody ResponseEntity<?> decide(@RequestBody List<FormSubmissionDTO> dto, @PathVariable String taskId) {
 		System.err.println("decide endpoint: ");
@@ -246,19 +242,9 @@ public class RegisterController {
 		String processInstanceId = task.getProcessInstanceId(); // iz taska izvlacimo proces instance id
 		System.err.println("decide->processInstanceId: " + processInstanceId.toString());
 
-		runtimeService.setVariable(processInstanceId, "decision", dto); // u decision variablu smo stavili dto
-
-		// submituj task form, ako smo stavljali validacije u bpmn modelu, puce ako nije
-		// ispostovana validacija
-		// mozemo tu parcijalnu validaciju hendlovati ovde pre nego sto complitujemo
-		// task
-		// try catch ako vrisne vrati nazad
-		try {
-			formService.submitTaskForm(taskId, map);
-		} catch (Exception e) {
-			// TODO:
-			System.err.println("bbb");
-		}
+		runtimeService.setVariable(processInstanceId, "decision", dto); // u decision variablu smo stavili dto		
+		formService.submitTaskForm(taskId, map);
+		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

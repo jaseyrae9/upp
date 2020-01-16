@@ -6,6 +6,7 @@ import { TokenStorageService } from 'src/app/auth/token-storage.service';
 import { TokenPayload } from 'src/app/model/token-payload';
 import * as decode from 'jwt-decode';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login-form',
@@ -14,6 +15,7 @@ import { Router } from '@angular/router';
 })
 export class LoginFormComponent implements OnInit {
   form: any = {};
+  errorMessage: String = '';
 
   private loginInfo: AuthLoginInfo;
 
@@ -40,9 +42,11 @@ export class LoginFormComponent implements OnInit {
           console.log(tokenPayload);
           this.router.navigate(['']);
       },
-      error => {
-        console.log('error -> ', error);
-        // this.errorMessage = error.error.details;
+      (err: HttpErrorResponse) => {
+        console.log('Error occured');
+        console.log('err: ', err);
+        this.errorMessage = err.error.message;
+
       }
 
     );
