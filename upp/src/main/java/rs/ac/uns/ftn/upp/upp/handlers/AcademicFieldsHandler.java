@@ -47,8 +47,10 @@ public class AcademicFieldsHandler implements TaskListener {
 				if(field.getId().equals("naucneOblasti")) {
 					EnumFormType eft = (EnumFormType)field.getType();
 					items = eft.getValues();
+					items.clear(); // Praznimo mapu jer nekako vuce stare vrednosti
 					System.err.println("drugi if");
 					for(AcademicField academicField: academicFields) {
+						System.out.println("dodato polje: " + academicField.getId() + " vrednost: " + academicField.getName());
 						items.put(academicField.getId().toString(), academicField.getName());
 					}
 				}

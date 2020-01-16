@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.upp.upp.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,8 +19,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class AcademicField {
+public class AcademicField implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 733369673667116561L;
+
 	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
