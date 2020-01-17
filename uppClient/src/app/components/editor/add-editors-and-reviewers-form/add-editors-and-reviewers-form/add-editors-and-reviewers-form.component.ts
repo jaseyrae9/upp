@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { JournalService } from 'src/app/services/journal/journal.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-editors-and-reviewers-form',
@@ -21,7 +22,8 @@ export class AddEditorsAndReviewersFormComponent implements OnInit {
   private enumerations = [];
   private enumerationsValues = [];
 
-  constructor(private journalService: JournalService) {
+  constructor(private journalService: JournalService,
+              private router: Router) {
     journalService.getTaskForm().subscribe(
       res => {
 
@@ -74,7 +76,7 @@ export class AddEditorsAndReviewersFormComponent implements OnInit {
         res => {
           console.log('res ', res);
           alert('Uspešno ste izabrali urednike i recenzente!');
-          window.location.reload();
+          this.router.navigate(['']);
         },
         (err: HttpErrorResponse) => {
           console.log('Error se desio prilikom odabira urednika i recenzenata');

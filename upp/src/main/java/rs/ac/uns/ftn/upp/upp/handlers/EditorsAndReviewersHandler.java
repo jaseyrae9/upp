@@ -82,7 +82,7 @@ public class EditorsAndReviewersHandler implements TaskListener {
 
 		Iterable<Customer> users = customerService.findAll();
 		for(Customer user: users) {
-			if(user.getUserAuthorities().contains(editorAuthority) && !user.getUsername().equals(starter))	{
+			if(user.getUserAuthorities().contains(editorAuthority))	{
 				if(!user.getUsername().equals(starter)) {
 					if(user.getJournal() == null) {
 						if(user.getCustomerAcademicFields().stream().anyMatch(afs::contains)) {

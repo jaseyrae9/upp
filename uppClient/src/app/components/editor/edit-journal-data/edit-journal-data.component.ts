@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { JournalService } from 'src/app/services/journal/journal.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit-journal-data',
@@ -21,7 +22,8 @@ export class EditJournalDataComponent implements OnInit {
   private enumerationsValues = [];
   private selectedValues = [];
 
-  constructor(private journalService: JournalService) {
+  constructor(private journalService: JournalService,
+              private router: Router) {
     journalService.getEditJournalTasks().subscribe(
       res => {
         console.log('res: ', res);
@@ -64,11 +66,11 @@ export class EditJournalDataComponent implements OnInit {
           console.log(property);
           console.log(value[property]);
 
-          if (value[property] === '') { // Kada dodamo recenzente i urednike
-            o.push({fieldId : property, fieldValue : new Array() });
-          } else {
+          // if (value[property] === '') { // Kada se dodaju recenzenti i urednici
+           // o.push({fieldId : property, fieldValue : new Array() });
+          // } else {
             o.push({fieldId : property, fieldValue : value[property]});
-          }
+          // }
       }
       console.log('podaci koji se salju za izmeni casopisa');
       console.log(o);
@@ -76,6 +78,7 @@ export class EditJournalDataComponent implements OnInit {
         res => {
           console.log('res ', res);
           alert('Uspešno ste izmenili casopis, ceka se odobrenje admina!');
+          this.router.navigate(['']);
         },
         (err: HttpErrorResponse) => {
           console.log('Error se desio prilikom izmene casopisa.');
