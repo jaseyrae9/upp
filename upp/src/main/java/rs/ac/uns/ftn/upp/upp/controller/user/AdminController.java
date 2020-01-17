@@ -66,8 +66,7 @@ public class AdminController {
 	}
 	
 	/**
-	 * Prikazuje formu adminu gde on odlucuje da li zeli da prihvati da je korisnik
-	 * recenzent ili ne.
+	 * Prikazuje formu adminu gde on donosi odluku.
 	 * 
 	 * @param taskId
 	 * @return
@@ -150,10 +149,7 @@ public class AdminController {
 				}
 				
 			}
-		}	
-		
-		
-		
+		}		
 		
 	}
 
