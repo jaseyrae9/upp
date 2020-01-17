@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
 import rs.ac.uns.ftn.upp.upp.model.Journal;
-import rs.ac.uns.ftn.upp.upp.model.user.Customer;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.JournalService;
 
 @Service

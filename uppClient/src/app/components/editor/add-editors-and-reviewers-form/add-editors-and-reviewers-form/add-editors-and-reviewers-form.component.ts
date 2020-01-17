@@ -80,7 +80,6 @@ export class AddEditorsAndReviewersFormComponent implements OnInit {
           console.log('Error se desio prilikom odabira urednika i recenzenata');
           console.log(err);
           this.errorMessage = err.error.message;
-
         }
       );
   }
