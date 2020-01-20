@@ -12,6 +12,15 @@ const httpOptions = {
 export class JournalService {
 
   constructor(private httpClient: HttpClient) { }
+
+  getAll(): Observable<any> {
+    return this.httpClient.get('http://localhost:8080/journal/all');
+  }
+
+  getJournal(id): Observable<any> {
+    return this.httpClient.get('http://localhost:8080/journal/getJournal/' + id);
+  }
+
   addJournal(journal, taskId) {
     return this.httpClient.post('http://localhost:8080/journal/post/'.concat(taskId), journal) as Observable<any>;
   }

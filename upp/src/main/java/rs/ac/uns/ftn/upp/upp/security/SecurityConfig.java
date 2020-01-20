@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().exceptionHandling()
 				.authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED)).and()
-				.authorizeRequests().antMatchers("/register/**").permitAll()
+				.authorizeRequests().antMatchers("/register/**", "/journal/all", "/journal/getJournal/{id}").permitAll()
 				.anyRequest().authenticated().and()
 				.addFilterBefore(new AuthenticationFilter(userDetailsService), BasicAuthenticationFilter.class);
 	}

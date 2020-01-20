@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
-import rs.ac.uns.ftn.upp.upp.model.Journal;
+import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
 
 
 @Entity

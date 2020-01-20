@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import rs.ac.uns.ftn.upp.upp.dto.FormFieldsDTO;
 import rs.ac.uns.ftn.upp.upp.dto.TaskDTO;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
-import rs.ac.uns.ftn.upp.upp.model.Journal;
+import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.JournalService;
 

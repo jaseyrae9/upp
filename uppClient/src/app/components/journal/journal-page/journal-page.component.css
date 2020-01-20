@@ -1,0 +1,59 @@
+
+
+body {
+    background: #F1F3FA;
+  }
+  
+  /* Profile container */
+  .profile {
+    margin: 20px 0;
+  }
+  
+  /* Profile sidebar */
+  .profile-sidebar {
+    padding: 20px 0 10px 0;
+    background: #fff;
+  }
+  
+  .profile-usertitle {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .profile-usertitle-name {
+    color: #33cabb;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 7px;
+  }
+  
+  .profile-usertitle-job {
+    color: darkslategray;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+  
+  /* Profile Content */
+  .profile-content {
+    padding: 20px;
+    background: #fff;
+    min-height: 460px;
+  }
+
+  ul.address-display {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  ul.address-display li:last-child {
+    border-bottom: none;
+  }
+  
+  ul.address-display li {
+    border-bottom: 1px solid #f0f4f7 !important;
+    color: #93a3b5;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 1.5%;
+  }

@@ -17,6 +17,10 @@ import { JwtInterceptor } from './auth/auth-interceptor';
 import { AddEditorsAndReviewersFormComponent } from './components/editor/add-editors-and-reviewers-form/add-editors-and-reviewers-form/add-editors-and-reviewers-form.component';
 import { EditorTasksComponent } from './components/editor/editor-tasks/editor-tasks.component';
 import { EditJournalDataComponent } from './components/editor/edit-journal-data/edit-journal-data.component';
+import { AllJournalsPageComponent } from './pages/all-journals-page/all-journals-page.component';
+import { JournalBasicDetailsComponent } from './components/journal/journal-basic-details/journal-basic-details.component';
+import { JournalPageComponent } from './components/journal/journal-page/journal-page.component';
+import { PaperBasicInfoComponent } from './components/journal/paper-basic-info/paper-basic-info.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +34,11 @@ import { EditJournalDataComponent } from './components/editor/edit-journal-data/
     NewJournalComponent,
     AddEditorsAndReviewersFormComponent,
     EditorTasksComponent,
-    EditJournalDataComponent
+    EditJournalDataComponent,
+    AllJournalsPageComponent,
+    JournalBasicDetailsComponent,
+    JournalPageComponent,
+    PaperBasicInfoComponent
   ],
   imports: [
     BrowserModule,

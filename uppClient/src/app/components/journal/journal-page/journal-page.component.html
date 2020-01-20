@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="row profile">
+  <div class="col-md-3">
+    <div class="profile-sidebar">
+      
+      <!-- SIDEBAR USER TITLE -->
+      <div class="profile-usertitle">
+        <div class="profile-usertitle-name">
+          
+            {{journal.name}}
+         
+        </div>
+        <div class="profile-usertitle-job">
+          {{journal.issn}}
+        </div>
+      </div>
+      <!-- END SIDEBAR USER TITLE -->
+      <!-- SIDEBAR BUTTONS -->
+  
+      <!-- SIDEBAR MENU -->
+      <ul class="address-display" *ngFor="let af of journal.journalAcademicFields" >        
+        <li>
+          {{af.name}} 
+        </li>     
+       
+      </ul>
+      
+      <!-- END MENU -->
+    </div>
+  </div>
+  <div class="col-md-9">
+    <div class="profile-content">
+       <app-paper-basic-info *ngFor="let paper of journal.papers" [paper] = 'paper'  class="row align-items-center p-1 mt-3"></app-paper-basic-info>
+    </div>
+  </div>
+</div>
+</div>

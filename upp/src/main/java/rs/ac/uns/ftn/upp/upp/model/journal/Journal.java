@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.upp.upp.model;
+package rs.ac.uns.ftn.upp.upp.model.journal;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -23,6 +23,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rs.ac.uns.ftn.upp.upp.model.AcademicField;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
 import rs.ac.uns.ftn.upp.upp.model.user.MembershipFeeMethod;
 
@@ -72,6 +73,11 @@ public class Journal implements Serializable {
 	@JoinTable(name = "journal_reviewers", joinColumns = @JoinColumn(name = "journal_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	@Getter(AccessLevel.NONE)
 	private Set<Customer> reviewers;
+	
+	
+	@JsonManagedReference(value = "paper")
+	@OneToMany(mappedBy = "journal", fetch = FetchType.EAGER)
+	private Set<Paper> papers; // radovi
 
 	public Set<AcademicField> getJournalAcademicFields() {
 		if (academicFields == null) {

@@ -1,0 +1,21 @@
+<div class="col">
+
+  <div class="card">
+    <div class="card-header">
+      <div class="d-flex">
+        <div class="p-2 flex-grow-1 "> {{ journal.name }}</div>
+        <div class="p-2 "> {{journal.issn}} </div>
+      </div>
+
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Naučne oblasti </h5>
+      <div class="card-text" *ngFor="let af of journal.journalAcademicFields"  style="display:inline-block;">                
+        <span class="badge badge-pill badge-primary razmak">  {{af.name}}  </span>
+      </div> 
+      <br/>
+      <hr/>
+      <div class="d-flex justify-content-start"> <a routerLink="/journal/{{journal.id}}">Details...</a></div>
+    </div>
+  </div>
+</div>

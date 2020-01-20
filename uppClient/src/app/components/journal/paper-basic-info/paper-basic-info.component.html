@@ -1,0 +1,26 @@
+<div class="col">
+
+  <div class="card">
+    <div class="card-header">
+      <div class="d-flex">
+        <div class="p-2 flex-grow-1 "> 
+          <span style="color: #33cabb; font-weight: 600;">
+            {{ paper.name }}
+          </span>
+        </div>
+        <div class="p-2 "> 
+          <span style="color: #33cabb; font-weight: 650;">
+            ${{paper.price}} 
+          </span>
+        </div>
+      </div>
+
+    </div>
+    <div class="card-body">
+      <p class="text-muted">Naučna oblast u koju se rad primarno klasifikuje: <span style="color: #33cabb;"><i>{{paper.academicField.name}} </i> </span> </p>
+     
+      <hr/>
+      <div class="d-flex justify-content-end"> <button class="btn btn-primary">Dodaj u korpu</button></div>
+    </div>
+  </div>
+</div>

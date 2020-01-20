@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -25,17 +24,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import rs.ac.uns.ftn.upp.upp.dto.FormFieldsDTO;
 import rs.ac.uns.ftn.upp.upp.dto.FormSubmissionDTO;
 import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
 import rs.ac.uns.ftn.upp.upp.exceptions.RequestDataException;
+import rs.ac.uns.ftn.upp.upp.exceptions.ResourceNotFoundException;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
+import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
 import rs.ac.uns.ftn.upp.upp.model.user.AuthenticationResponse;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
 import rs.ac.uns.ftn.upp.upp.security.auth.TokenUtils;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.AcademicFieldService;
+import rs.ac.uns.ftn.upp.upp.service.entityservice.JournalService;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.user.CustomerService;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.user.security.CustomUserDetailsService;
 
@@ -63,6 +66,37 @@ public class JournalController {
 
 	@Autowired
 	private TokenUtils tokenUtils;
+	
+	@Autowired
+	private JournalService journalService;
+	
+	
+	/**
+	 *  Returns active objects journals. Objects contain id and name.
+	 *  
+	 * @return information about active journals.
+	 */
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public ResponseEntity<?> getJournals() {
+		System.err.println("Usao u get all journals controler");
+		Iterable<Journal> ret = journalService.getJournals();
+		return new ResponseEntity<>(ret, HttpStatus.OK);
+	}
+	
+	/**
+	 * Returns data about journal selected id.
+	 * 
+	 * @param id - id of journal
+	 * @return
+	 * @throws NotFoundException 
+	 * @throws ResourceNotFoundException - if there is no journal with selected id
+	 */
+	@RequestMapping(value = "/getJournal/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getJournal(@PathVariable Integer id) throws NotFoundException {
+		System.err.println("contoler get journal sa id " + id);
+		Journal journal = journalService.getJournal(id);	
+		return new ResponseEntity<>(journal, HttpStatus.OK);
+	}
 
 	/**
 	 * Uzimamo prvi user task iz bpmn modela i polja forme tog user taska, zatim ta

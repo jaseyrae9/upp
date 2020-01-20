@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
-import rs.ac.uns.ftn.upp.upp.model.Journal;
+import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.JournalService;
 

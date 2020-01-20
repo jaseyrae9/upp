@@ -9,11 +9,15 @@ import { NewJournalComponent } from './components/editor/new-journal/new-journal
 // tslint:disable-next-line:max-line-length
 import { AddEditorsAndReviewersFormComponent } from './components/editor/add-editors-and-reviewers-form/add-editors-and-reviewers-form/add-editors-and-reviewers-form.component';
 import { EditJournalDataComponent } from './components/editor/edit-journal-data/edit-journal-data.component';
+import { AllJournalsPageComponent } from './pages/all-journals-page/all-journals-page.component';
+import { JournalPageComponent } from './components/journal/journal-page/journal-page.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginFormComponent},
   { path: 'register', component: RegisterFormComponent},
   { path: '', component: HomePageComponent },
+  { path: 'journals', component: AllJournalsPageComponent},
+  { path: 'journal/:id', component: JournalPageComponent },
   { path: 'decide', component: SomethingComponent},
   { path: 'addJournal', component: NewJournalComponent},
   { path: 'addEditorsAndReviewers', component: AddEditorsAndReviewersFormComponent},
