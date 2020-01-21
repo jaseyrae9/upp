@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.upp.upp.service.entityservice;
+package rs.ac.uns.ftn.upp.upp.service.entityservice.journal;
 
 import java.util.Optional;
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
 import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
-import rs.ac.uns.ftn.upp.upp.service.entityservice.JournalService;
+import rs.ac.uns.ftn.upp.upp.service.entityservice.journal.JournalService;
 
 @Service
 public class ActivateJournalService implements JavaDelegate {

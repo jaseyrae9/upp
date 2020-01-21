@@ -18,6 +18,7 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
 import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
 
@@ -27,6 +28,7 @@ import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
 //Lambok annotations
 @Getter
 @Setter
+@ToString
 @EqualsAndHashCode(callSuper = true)
 public class Customer extends MyUser implements Serializable {
 
@@ -72,6 +74,9 @@ public class Customer extends MyUser implements Serializable {
 	@ManyToMany(mappedBy = "reviewers", fetch = FetchType.LAZY)
 	@Getter(AccessLevel.NONE)
 	private Set<Journal> journals;	// Kada je recenzent
+	
+	@Column()
+	private String api_key; // iz kp-a
 	
 	public Set<Journal> getCustomerJournals() {
 		if(journals == null) {

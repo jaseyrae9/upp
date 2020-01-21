@@ -1,5 +1,6 @@
 import { AcademicField } from '../user/academicField';
 import { Journal } from './journal';
+import { Author } from '../user/author';
 
 export class Paper {
     id: number;
@@ -7,4 +8,5 @@ export class Paper {
     academicField: AcademicField;
     price: number;
     journal: Journal;
+    author: Author;
 }

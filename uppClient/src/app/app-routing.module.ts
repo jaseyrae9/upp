@@ -11,6 +11,7 @@ import { AddEditorsAndReviewersFormComponent } from './components/editor/add-edi
 import { EditJournalDataComponent } from './components/editor/edit-journal-data/edit-journal-data.component';
 import { AllJournalsPageComponent } from './pages/all-journals-page/all-journals-page.component';
 import { JournalPageComponent } from './components/journal/journal-page/journal-page.component';
+import { AllPapersCartComponent } from './components/cart/all-papers-cart/all-papers-cart.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginFormComponent},
@@ -21,7 +22,8 @@ const routes: Routes = [
   { path: 'decide', component: SomethingComponent},
   { path: 'addJournal', component: NewJournalComponent},
   { path: 'addEditorsAndReviewers', component: AddEditorsAndReviewersFormComponent},
-  { path: 'editJournalData', component: EditJournalDataComponent}
+  { path: 'editJournalData', component: EditJournalDataComponent},
+  { path: 'cart', component: AllPapersCartComponent}
 
 ];
 

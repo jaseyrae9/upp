@@ -21,6 +21,8 @@ import { AllJournalsPageComponent } from './pages/all-journals-page/all-journals
 import { JournalBasicDetailsComponent } from './components/journal/journal-basic-details/journal-basic-details.component';
 import { JournalPageComponent } from './components/journal/journal-page/journal-page.component';
 import { PaperBasicInfoComponent } from './components/journal/paper-basic-info/paper-basic-info.component';
+import { AllPapersCartComponent } from './components/cart/all-papers-cart/all-papers-cart.component';
+import { PaperDetailsCartComponent } from './components/cart/paper-details-cart/paper-details-cart.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,9 @@ import { PaperBasicInfoComponent } from './components/journal/paper-basic-info/p
     AllJournalsPageComponent,
     JournalBasicDetailsComponent,
     JournalPageComponent,
-    PaperBasicInfoComponent
+    PaperBasicInfoComponent,
+    AllPapersCartComponent,
+    PaperDetailsCartComponent
   ],
   imports: [
     BrowserModule,

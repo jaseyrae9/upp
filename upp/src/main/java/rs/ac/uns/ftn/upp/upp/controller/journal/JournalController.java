@@ -38,7 +38,7 @@ import rs.ac.uns.ftn.upp.upp.model.user.AuthenticationResponse;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
 import rs.ac.uns.ftn.upp.upp.security.auth.TokenUtils;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.AcademicFieldService;
-import rs.ac.uns.ftn.upp.upp.service.entityservice.JournalService;
+import rs.ac.uns.ftn.upp.upp.service.entityservice.journal.JournalService;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.user.CustomerService;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.user.security.CustomUserDetailsService;
 

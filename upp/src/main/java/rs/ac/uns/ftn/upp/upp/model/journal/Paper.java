@@ -18,12 +18,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
+import rs.ac.uns.ftn.upp.upp.model.user.Customer;
 
 @Entity
 //Lambok annotations
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Paper implements Serializable {/**
@@ -51,4 +54,8 @@ public class Paper implements Serializable {/**
 	@JoinColumn(name="journal_id", referencedColumnName="id")
 	private Journal journal; 
 
+	@OneToOne(targetEntity = Customer.class, fetch = FetchType.EAGER)
+	@JoinColumn(nullable = false, name = "author_id")
+	private Customer author; // autor rada
+	
 }

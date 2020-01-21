@@ -1,0 +1,50 @@
+package rs.ac.uns.ftn.upp.upp.controller.journal;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import rs.ac.uns.ftn.upp.upp.dto.journal.CompletePaymentDTO;
+import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
+import rs.ac.uns.ftn.upp.upp.model.order.Order;
+import rs.ac.uns.ftn.upp.upp.model.order.OrderStatus;
+import rs.ac.uns.ftn.upp.upp.service.entityservice.journal.OrderService;
+
+@RestController
+@RequestMapping("/order")
+public class OrderController {
+	
+	@Autowired
+	private OrderService orderService;
+
+	@RequestMapping(value = "/complete", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public String complete(@RequestBody CompletePaymentDTO completePaymentDTO) throws NotFoundException {
+		System.out.println("Complete payment");
+		System.out.println(completePaymentDTO);
+		if(completePaymentDTO.getStatus().contentEquals("COMPLETED")) {
+			Order o = orderService.findById(completePaymentDTO.getOrder_id());
+			o.setStatus(OrderStatus.COMPLETED);	
+			orderService.saveOrder(o);
+			return "Success";
+		}
+		else if(completePaymentDTO.getStatus().contentEquals("FAILED")) {
+			Order o = orderService.findById(completePaymentDTO.getOrder_id());
+			o.setStatus(OrderStatus.FAILED);	
+			orderService.saveOrder(o);
+			return "Failed";
+		}
+		
+		return "Error";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET)
+	public List<Order> completedOrders() {
+		return orderService.findAll();
+	}
+	
+}

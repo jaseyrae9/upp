@@ -17,10 +17,11 @@
 
     </div>
     <div class="card-body">
+      <p class="card-title">Autor rada: {{paper.author.firstName}} {{paper.author.lastName}} </p>
       <p class="text-muted">Naučna oblast u koju se rad primarno klasifikuje: <span style="color: #33cabb;"><i>{{paper.academicField.name}} </i> </span> </p>
      
       <hr/>
-      <div class="d-flex justify-content-end"> <button class="btn btn-primary">Dodaj u korpu</button></div>
+      <div class="d-flex justify-content-end"> <button class="btn btn-primary" (click)="addToCart()">Dodaj u korpu</button></div>
     </div>
   </div>
 </div>
