@@ -14,7 +14,6 @@ export class AllJournalsPageComponent implements OnInit {
 
   ngOnInit() {
     this.loadJournals();
-    
   }
 
   loadJournals() {

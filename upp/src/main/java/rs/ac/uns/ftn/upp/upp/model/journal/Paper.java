@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.upp.upp.model.journal;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,11 +10,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,10 +49,7 @@ public class Paper implements Serializable {/**
 	@OneToOne(targetEntity = AcademicField.class, fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "academicField_id")
 	private AcademicField academicField; // Naučna oblast u koju se rad primarno klasifikuje 
-	
-	@Column(nullable = false)
-	private Double price;
-	
+
 	@JsonBackReference(value="paper")
 	@ManyToOne(fetch = FetchType.EAGER)	
 	@JoinColumn(name="journal_id", referencedColumnName="id")
@@ -57,5 +58,5 @@ public class Paper implements Serializable {/**
 	@OneToOne(targetEntity = Customer.class, fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "author_id")
 	private Customer author; // autor rada
-	
+
 }

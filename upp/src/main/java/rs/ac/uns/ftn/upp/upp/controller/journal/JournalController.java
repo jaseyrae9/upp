@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.upp.upp.controller.journal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.camunda.bpm.engine.FormService;
 import org.camunda.bpm.engine.RuntimeService;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import rs.ac.uns.ftn.upp.upp.dto.FormFieldsDTO;
 import rs.ac.uns.ftn.upp.upp.dto.FormSubmissionDTO;
+import rs.ac.uns.ftn.upp.upp.dto.journal.JournalDTO;
 import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
 import rs.ac.uns.ftn.upp.upp.exceptions.RequestDataException;
 import rs.ac.uns.ftn.upp.upp.exceptions.ResourceNotFoundException;
@@ -79,7 +81,7 @@ public class JournalController {
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public ResponseEntity<?> getJournals() {
 		System.err.println("Usao u get all journals controler");
-		Iterable<Journal> ret = journalService.getJournals();
+		Iterable<JournalDTO> ret = journalService.getJournals();
 		return new ResponseEntity<>(ret, HttpStatus.OK);
 	}
 	
@@ -94,7 +96,7 @@ public class JournalController {
 	@RequestMapping(value = "/getJournal/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getJournal(@PathVariable Integer id) throws NotFoundException {
 		System.err.println("contoler get journal sa id " + id);
-		Journal journal = journalService.getJournal(id);	
+		JournalDTO journal = journalService.getJournal(id);	
 		return new ResponseEntity<>(journal, HttpStatus.OK);
 	}
 

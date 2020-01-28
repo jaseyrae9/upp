@@ -1,4 +1,4 @@
-export class Author {
+export class Editor {
     id: number;
     username: string;
     firstName: string;

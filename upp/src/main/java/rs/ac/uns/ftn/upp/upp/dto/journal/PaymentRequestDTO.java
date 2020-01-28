@@ -7,13 +7,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import rs.ac.uns.ftn.upp.upp.model.journal.Paper;
+import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 public class PaymentRequestDTO {
-	private List<Paper> papers = new ArrayList<Paper>();
+	private List<Journal> journals = new ArrayList<Journal>();
 
 }

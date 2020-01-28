@@ -21,6 +21,7 @@ import lombok.Setter;
 import lombok.ToString;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
 import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
+import rs.ac.uns.ftn.upp.upp.model.journal.Paper;
 
 
 @Entity
@@ -75,13 +76,14 @@ public class Customer extends MyUser implements Serializable {
 	@Getter(AccessLevel.NONE)
 	private Set<Journal> journals;	// Kada je recenzent
 	
-	@Column()
-	private String api_key; // iz kp-a
-	
 	public Set<Journal> getCustomerJournals() {
 		if(journals == null) {
 			journals = new HashSet<Journal>();
 		}
 		return journals;
 	}	
+	
+	@Column()
+	private String api_key; // iz kp-a
+	
 }

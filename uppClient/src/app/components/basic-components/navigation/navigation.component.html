@@ -29,7 +29,12 @@
 
 
       <ul class="nav navbar-nav navbar-right ml-auto" *ngIf="loggedIn; else notShow">
-
+        <li *ngIf="tokenService.isBuyer" class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/purchased">Kupljeni</a>
+        </li> 
+        <li *ngIf="tokenService.isBuyer" class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/cart">Korpa</a>
+        </li> 
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link " >{{username}} </a>
         </li> 
@@ -40,7 +45,7 @@
       
       <ng-template #notShow>      
         <ul class="nav navbar-nav navbar-right ml-auto">
-          <li class="nav-item" routerLinkActive="active">
+          <li *ngIf="tokenService.isVistor" class="nav-item" routerLinkActive="active">
             <a class="nav-link" routerLink="/cart">Korpa</a>
           </li> 
           <li class="nav-item" routerLinkActive="active">

@@ -9,8 +9,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -18,7 +23,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import rs.ac.uns.ftn.upp.upp.model.journal.Paper;
+import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
+import rs.ac.uns.ftn.upp.upp.model.user.Buyer;
+import rs.ac.uns.ftn.upp.upp.model.user.Customer;
 
 @Entity
 @Getter
@@ -43,15 +50,19 @@ public class Order {
 	@Column
 	private OrderStatus status;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@Getter(AccessLevel.NONE)
-	protected List<Paper> papers;
+	protected List<Journal> journals;
 	
-	public List<Paper> getOrderPapers() {
-		if(papers == null) {
-			papers = new ArrayList<>();
+	public List<Journal> getOrderJournals() {
+		if(journals == null) {
+			journals = new ArrayList<>();
 		}
-		return papers;
+		return journals;
 	}	
 	
+	@JsonBackReference(value="order")
+	@ManyToOne(fetch = FetchType.EAGER)	
+	@JoinColumn(name="buyer_id", referencedColumnName="id")
+	private Buyer buyer; 
 }

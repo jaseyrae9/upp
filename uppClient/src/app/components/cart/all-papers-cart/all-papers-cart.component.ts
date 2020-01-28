@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Author } from 'src/app/model/user/author';
+import { Editor } from 'src/app/model/user/editor';
 import { PaperService } from 'src/app/services/journal/paper.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PaymentRequestDTO } from 'src/app/model/journal/paymentRequestDTO';
 import { Router } from '@angular/router';
+import { TokenStorageService } from 'src/app/auth/token-storage.service';
 
 @Component({
   selector: 'app-all-papers-cart',
@@ -12,11 +13,12 @@ import { Router } from '@angular/router';
 })
 export class AllPapersCartComponent implements OnInit {
   items = [];
-  authors = [];
+  editors = [];
   paymentRequestDTO = new PaymentRequestDTO();
 
   constructor(private paperService: PaperService,
-              private router: Router) { }
+              private router: Router,
+              public tokenService: TokenStorageService) { }
 
   ngOnInit() {
     this.getCartItems();
@@ -26,23 +28,25 @@ export class AllPapersCartComponent implements OnInit {
     if (sessionStorage.length > 0) {
       this.items = JSON.parse(sessionStorage.getItem('itemsInCart'));
       //
-      if(this.items == null) {
+      if (this.items == null) {
         this.items = [];
       }
       console.log('items', this.items);
       for (const item of this.items) {
+        console.log('item', item);
         // item.author.id
-        if (!this.containsId(this.authors, item.author.id)) {
-          this.authors.push(new Author(item.author.id, item.author.username, item.author.firstName, item.author.lastName));
+        if (!this.containsId(this.editors, item.editorInChief.id)) {
+          // tslint:disable-next-line: max-line-length
+          this.editors.push(new Editor(item.editorInChief.id, item.editorInChief.username, item.editorInChief.firstName, item.editorInChief.lastName));
         }
       }
-      console.log('autori: ', this.authors);
+      console.log('editori: ', this.editors);
     }
   }
 
-  containsId(authors: Author[], authorId: number) {
-    for(const author of authors) {
-      if (author.id === authorId) {
+  containsId(editors: Editor[], editorId: number) {
+    for (const editor of editors) {
+      if (editor.id === editorId) {
         return true;
         break;
       }
@@ -50,17 +54,27 @@ export class AllPapersCartComponent implements OnInit {
     return false;
   }
 
-  buyFromThisSeller(author: Author) {
-    console.log('autor: ', author);
+  buyFromThisSeller(editor: Editor) {
+    console.log('autor: ', editor);
     for (const item of this.items) {
-      if(item.author.id === author.id) {
-        this.paymentRequestDTO.papers.push(item);
+      if (item.editorInChief.id === editor.id) {
+        this.paymentRequestDTO.journals.push(item);
       }
     }
     console.log('ti radovi:' , this.paymentRequestDTO);
     this.paperService.buyFromThisSeller(this.paymentRequestDTO).subscribe(
       data => {
         console.log(data);
+        for (const journal of this.paymentRequestDTO.journals) {
+           for (const item of this.items) {
+            if (journal.id === item.id) {
+              const index = this.items.findIndex(item => item.id === journal.id);
+              this.items.splice(index, 1);
+            }
+           }
+        }
+        console.log('items, ', this.items);
+        sessionStorage.setItem('itemsInCart', JSON.stringify(this.items));
         window.location.href = data;
       },
       (err: HttpErrorResponse) => {

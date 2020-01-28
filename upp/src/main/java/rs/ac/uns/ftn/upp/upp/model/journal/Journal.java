@@ -1,7 +1,9 @@
 package rs.ac.uns.ftn.upp.upp.model.journal;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -16,6 +18,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.Where;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AccessLevel;
@@ -25,10 +30,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
+import rs.ac.uns.ftn.upp.upp.model.user.Buyer;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
 import rs.ac.uns.ftn.upp.upp.model.user.MembershipFeeMethod;
 
 @Entity
+@Where(clause="active=true")
 //Lambok annotations
 @Getter
 @Setter
@@ -62,6 +69,9 @@ public class Journal implements Serializable {
 
 	@Column(nullable = false)
 	private Boolean active = false;
+	
+	@Column(nullable = false)
+	private Double price;
 
 	@OneToOne(targetEntity = Customer.class, fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "editor_in_chief_id")
@@ -75,8 +85,7 @@ public class Journal implements Serializable {
 	@JoinTable(name = "journal_reviewers", joinColumns = @JoinColumn(name = "journal_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	@Getter(AccessLevel.NONE)
 	private Set<Customer> reviewers;
-	
-	
+		
 	@JsonManagedReference(value = "paper")
 	@OneToMany(mappedBy = "journal", fetch = FetchType.EAGER)
 	private Set<Paper> papers; // radovi
@@ -94,5 +103,19 @@ public class Journal implements Serializable {
 		}
 		return reviewers;
 	}
+	
+	@ManyToMany(mappedBy = "journals", fetch = FetchType.LAZY)
+	@Getter(AccessLevel.NONE)
+	private List<Buyer> buyers;
+	
+	
+	public List<Buyer> getJournalBuyers() {
+		if (buyers == null) {
+			buyers = new ArrayList<Buyer>();
+		}
+		return buyers;
+	}
+	
+	
 
 }

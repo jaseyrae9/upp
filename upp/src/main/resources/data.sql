@@ -56,6 +56,13 @@ WHERE
 NOT EXISTS (
     SELECT 6 FROM authority WHERE name = 'AUTHOR'
 );
+
+INSERT INTO authority(id, name) 
+SELECT 7, 'BUYER'
+WHERE 
+NOT EXISTS (
+    SELECT 7  FROM authority WHERE name = 'BUYER'
+);
 ---------------------------------------------------------------------------
 -- dodavanje demo korisnika
 INSERT INTO users(type, id, confirmed_mail, email, first_name, last_name, password, username, accepted_as_reviewer, active, city, country, title, wants_to_be_reviewer, journal_id, api_key) 
@@ -76,7 +83,7 @@ WHERE u.username = 'demo' AND a.name = 'ADMIN' AND
 
 -- dodavanje urednik korisnika
 INSERT INTO users(type, id, confirmed_mail, email, first_name, last_name, password, username, accepted_as_reviewer, active, city, country, title, wants_to_be_reviewer, journal_id, api_key) 
-SELECT 'customer', 1000, true, 'urednik@camunda.org', 'Urednik', 'Urednik', '$2a$10$Zp/LQilwI4szts.Yc5xBSehHCwICvmxeCOxwbhwSfE5vxAUFvflXO', 'urednik', false, true, 'grad', 'drzava', 'title', false, null, null
+SELECT 'customer', 1000, true, 'urednik@camunda.org', 'Urednik', 'Urednik', '$2a$10$Zp/LQilwI4szts.Yc5xBSehHCwICvmxeCOxwbhwSfE5vxAUFvflXO', 'urednik', false, true, 'grad', 'drzava', 'title', false, null, '991c77ae-7eb1-4d5e-be4f-cde7f816ac12'
 WHERE 
 NOT EXISTS (
     SELECT 1000 FROM users WHERE username = 'urednik'
@@ -227,7 +234,7 @@ WHERE u.username = 'recenzent1' AND a.name = 'fizika' AND
     
     -- dodavanje autor korisnika
 INSERT INTO users(type, id, confirmed_mail, email, first_name, last_name, password, username, accepted_as_reviewer, active, city, country, title, wants_to_be_reviewer, journal_id, api_key) 
-SELECT 'customer', 3000, true, 'autor@camunda.org', 'autor', 'autor', '$2a$10$Zp/LQilwI4szts.Yc5xBSehHCwICvmxeCOxwbhwSfE5vxAUFvflXO', 'autor', false, true, 'grad', 'drzava', 'title', false, null, '991c77ae-7eb1-4d5e-be4f-cde7f816ac12'
+SELECT 'customer', 3000, true, 'autor@camunda.org', 'autor', 'autor', '$2a$10$Zp/LQilwI4szts.Yc5xBSehHCwICvmxeCOxwbhwSfE5vxAUFvflXO', 'autor', false, true, 'grad', 'drzava', 'title', false, null, null
 WHERE 
 NOT EXISTS (
     SELECT 3000 FROM users WHERE username = 'autor'
@@ -257,5 +264,19 @@ WHERE u.username = 'autor1' AND a.name = 'AUTHOR' AND
         SELECT 3001 FROM users_authorities WHERE my_user_id = u.id
     );
  --------------------------------------------------------------------
-
+    -- dodavanje kupac korisnika
+INSERT INTO users(type, id, confirmed_mail, email, first_name, last_name, password, username, accepted_as_reviewer, active, city, country, title, wants_to_be_reviewer, journal_id, api_key) 
+SELECT 'buyer', 4001, true, 'kupac@camunda.org', 'kupac', 'kupac', '$2a$10$Zp/LQilwI4szts.Yc5xBSehHCwICvmxeCOxwbhwSfE5vxAUFvflXO', 'kupac', false, true, 'grad', 'drzava', 'title', false, null, null
+WHERE 
+NOT EXISTS (
+    SELECT 4001 FROM users WHERE username = 'kupac'
+);
+-- dodavanje veze izmedju kupac korisnika i kupac uloge
+INSERT INTO users_authorities(my_user_id, authorities_id) 
+SELECT u.id, a.id
+FROM users u, authority a
+WHERE u.username = 'kupac' AND a.name = 'BUYER' AND 
+    NOT EXISTS (
+        SELECT 4001 FROM users_authorities WHERE my_user_id = u.id
+    );
     

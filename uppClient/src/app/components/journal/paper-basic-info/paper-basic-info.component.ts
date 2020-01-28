@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Paper } from 'src/app/model/journal/paper';
+import { TokenStorageService } from 'src/app/auth/token-storage.service';
 
 @Component({
   selector: 'app-paper-basic-info',
@@ -11,7 +12,7 @@ export class PaperBasicInfoComponent implements OnInit {
   itemsInCart = [];
   items = [];
 
-  constructor() { }
+  constructor(public tokenService: TokenStorageService) { }
 
   ngOnInit() {
   }

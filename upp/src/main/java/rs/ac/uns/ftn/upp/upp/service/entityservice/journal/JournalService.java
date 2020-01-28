@@ -1,10 +1,15 @@
 package rs.ac.uns.ftn.upp.upp.service.entityservice.journal;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import rs.ac.uns.ftn.upp.upp.dto.journal.JournalDTO;
 import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
 import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
 import rs.ac.uns.ftn.upp.upp.repository.JournalRepository;
@@ -38,18 +43,27 @@ public class JournalService {
 	/**
 	 * @return informations about all active journals
 	 */
-	public Iterable<Journal> getJournals() {
+	public Iterable<JournalDTO> getJournals() {
 		System.err.println("Usao u get journals servise");
 
 		Iterable<Journal> journals = journalRepository.findAll();
-		return journals;
+		
+		Set<JournalDTO> ret = new HashSet<>();
+		for (Journal journal : journals) {
+			ret.add(new JournalDTO(journal));
+		}
+		
+		
+		System.err.println("aaaa");
+		return ret;
 	}
-	public Journal getJournal(Integer id) throws NotFoundException {
+	public JournalDTO getJournal(Integer id) throws NotFoundException {
 		Optional<Journal> journal = journalRepository.findById(id);
 		if (!journal.isPresent()) {
 			throw new NotFoundException(id, Journal.class.getSimpleName());
 		}
+		
 		System.err.println("service: journal id " + id);
-		return journal.get();
+		return new JournalDTO(journal.get());
 	}
 }
