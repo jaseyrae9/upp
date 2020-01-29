@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenStorageService } from 'src/app/auth/token-storage.service';
 
@@ -34,4 +34,5 @@ export class NavigationComponent implements OnInit {
     console.log('pozvana funkcija');
     this.router.navigate(['/register']);
   }
+
 }

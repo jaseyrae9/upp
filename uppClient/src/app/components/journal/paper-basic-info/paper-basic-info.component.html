@@ -20,8 +20,10 @@
       <p class="card-title">Autor rada: {{paper.author.firstName}} {{paper.author.lastName}} </p>
       <p class="text-muted">Naučna oblast u koju se rad primarno klasifikuje: <span style="color: #33cabb;"><i>{{paper.academicField.name}} </i> </span> </p>
      
-      <hr/>
-      <div class="d-flex justify-content-start"> <a routerLink="">Details...</a></div>
+      <hr/> 
+      <div *ngIf="message == 'true'" class="d-flex justify-content-start"> <a routerLink="">Detalji...</a></div>
+      <div *ngIf="message == 'false'" class="d-flex justify-content-start"> <a style="color: #33cabb;">Morate kupiti časopis</a> </div>
+
     </div>
   </div>
 </div>

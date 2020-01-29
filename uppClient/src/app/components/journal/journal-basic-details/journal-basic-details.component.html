@@ -10,12 +10,12 @@
     </div>
     <div class="card-body">
       <h5 class="card-title">Naučne oblasti </h5>
-      <div class="card-text" *ngFor="let af of journal.journalAcademicFields"  style="display:inline-block;">                
+      <div class="card-text" *ngFor="let af of journal.academicFields"  style="display:inline-block;">                
         <span class="badge badge-pill badge-primary razmak">  {{af.name}}  </span>
       </div> 
       <br/>
       <hr/>
-      <div class="d-flex justify-content-start"> <a routerLink="/journal/{{journal.id}}">Details...</a></div>
+      <div class="d-flex justify-content-start"> <a routerLink="/journal/{{journal.id}}">Detalji...</a></div>
     </div>
   </div>
 </div>

@@ -1,0 +1,9 @@
+<div class="container">
+   
+    <p *ngIf='journals.length == 0' align="center" style="font-size: 35px; color:  #33cabb;">Nemate ni jedan kupljeni časopis.</p>
+    <p class="pt-3"  align="center" style="font-size: 35px; color:  #33cabb;">Kupljeni časopisi</p>
+
+    <app-journal-basic-details *ngFor="let journal of journals" [journal] = 'journal' class="row align-items-center p-1 mt-3"></app-journal-basic-details>
+  
+  </div>
+  

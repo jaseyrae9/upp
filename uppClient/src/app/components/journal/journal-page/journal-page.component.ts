@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { JournalService } from 'src/app/services/journal/journal.service';
 import { Journal } from 'src/app/model/journal/journal';
 import { ActivatedRoute } from '@angular/router';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-journal-page',
@@ -11,11 +12,14 @@ import { ActivatedRoute } from '@angular/router';
 export class JournalPageComponent implements OnInit {
   journalId: number;
   journal: Journal = new Journal();
-
+  message: string;
   itemsInCart = [];
   items = [];
+
+
   constructor(private journalService: JournalService,
               private route: ActivatedRoute,
+              private dataService: DataService
     ) { }
 
   ngOnInit() {
@@ -23,6 +27,8 @@ export class JournalPageComponent implements OnInit {
     this.journalId = +journalId; // + -> string u int
 
     this.getJournal();
+    this.dataService.currentMessage.subscribe(message => this.message = message);
+    console.log('init u journal page', this.message);
   }
 
   getJournal() {

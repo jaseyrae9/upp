@@ -13,6 +13,10 @@ export class JournalService {
 
   constructor(private httpClient: HttpClient) { }
 
+  getAllPurchased(): Observable<any> {
+    return this.httpClient.get('http://localhost:8080/order');
+  }
+
   getAll(): Observable<any> {
     return this.httpClient.get('http://localhost:8080/journal/all');
   }

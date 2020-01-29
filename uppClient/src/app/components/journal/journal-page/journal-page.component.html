@@ -17,11 +17,11 @@
       <!-- END SIDEBAR USER TITLE -->
       <!-- SIDEBAR BUTTONS -->
       <div class="profile-userbuttons">
-        <button  (click)="addToCart()" type="button" class="btn btn-primary btn-sm">Dodaj u korpu</button>
+        <button *ngIf="message == 'false'" (click)="addToCart()" type="button" class="btn btn-primary btn-sm">Dodaj u korpu</button>
       </div>
       <!-- END SIDEBAR BUTTONS -->
       <!-- SIDEBAR MENU -->
-      <ul class="address-display" *ngFor="let af of journal.journalAcademicFields" >        
+      <ul class="address-display" *ngFor="let af of journal.academicFields" >        
         <li>
           {{af.name}} 
         </li>     

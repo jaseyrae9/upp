@@ -81,7 +81,7 @@ public class JournalController {
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public ResponseEntity<?> getJournals() {
 		System.err.println("Usao u get all journals controler");
-		Iterable<JournalDTO> ret = journalService.getJournals();
+		Set<JournalDTO> ret = journalService.getJournals();
 		return new ResponseEntity<>(ret, HttpStatus.OK);
 	}
 	

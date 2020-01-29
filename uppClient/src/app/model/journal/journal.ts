@@ -10,7 +10,7 @@ export class Journal {
     id: number;
     name: string;
     issn: string;
-    journalAcademicFields: AcademicField[];
+    academicFields: AcademicField[];
     membershipFeeMethod: MembershipFeeMethod;
     papers: Paper[] = [];
     editorInChief: Editor;

@@ -1,21 +1,8 @@
 package rs.ac.uns.ftn.upp.upp.dto.journal;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -44,16 +31,22 @@ public class JournalDTO {
 
 	private Customer editorInChief; // glavni urednik
 
-	private Set<Paper> papers; // radovi
+	private Set<PaperDTO> papers; // radovi
 
 	public JournalDTO(Journal journal) {
 		this.id = journal.getId();
 		this.name = journal.getName();
 		this.issn = journal.getIssn();
 		this.academicFields = journal.getJournalAcademicFields();
+		System.out.println("naucne oblasti " + journal.getJournalAcademicFields() );
 		this.membershipFeeMethod = journal.getMembershipFeeMethod();
 		this.price = journal.getPrice();
 		this.editorInChief = journal.getEditorInChief();
-		this.papers = journal.getPapers();
+		this.papers = new HashSet<>();
+		if(journal.getPapers() != null) {
+			for(Paper paper: journal.getPapers()) {
+				this.papers.add(new PaperDTO(paper));
+			}
+		}
 	}
 }

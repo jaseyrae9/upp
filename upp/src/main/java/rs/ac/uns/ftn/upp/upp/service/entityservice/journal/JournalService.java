@@ -43,7 +43,7 @@ public class JournalService {
 	/**
 	 * @return informations about all active journals
 	 */
-	public Iterable<JournalDTO> getJournals() {
+	public Set<JournalDTO> getJournals() {
 		System.err.println("Usao u get journals servise");
 
 		Iterable<Journal> journals = journalRepository.findAll();
@@ -53,8 +53,6 @@ public class JournalService {
 			ret.add(new JournalDTO(journal));
 		}
 		
-		
-		System.err.println("aaaa");
 		return ret;
 	}
 	public JournalDTO getJournal(Integer id) throws NotFoundException {

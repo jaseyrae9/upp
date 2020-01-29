@@ -21,8 +21,6 @@ import lombok.Setter;
 import lombok.ToString;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
 import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
-import rs.ac.uns.ftn.upp.upp.model.journal.Paper;
-
 
 @Entity
 @DiscriminatorValue("customer")

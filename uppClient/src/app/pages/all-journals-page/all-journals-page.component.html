@@ -1,6 +1,6 @@
 <div class="container">
    
-    <p *ngIf='journals.length == 0' align="center" style="font-size: 35px; color:  #33cabb;">There are no journals.</p>
+    <p *ngIf='journals.length == 0' align="center" style="font-size: 35px; color:  #33cabb;">Ne postoji ni jedan časopis.</p>
     <app-journal-basic-details *ngFor="let journal of journals" [journal] = 'journal' class="row align-items-center p-1 mt-3"></app-journal-basic-details>
     <!--    
         <app-car-company-basic-details *ngFor="let cmp of companies" [carCompany] = 'cmp' class="row border rounded align-items-center p-1 mt-3"></app-car-company-basic-details>

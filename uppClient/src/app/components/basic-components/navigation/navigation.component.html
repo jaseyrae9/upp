@@ -30,7 +30,7 @@
 
       <ul class="nav navbar-nav navbar-right ml-auto" *ngIf="loggedIn; else notShow">
         <li *ngIf="tokenService.isBuyer" class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/purchased">Kupljeni</a>
+          <a class="nav-link" routerLink="/purchased" >Kupljeni</a>
         </li> 
         <li *ngIf="tokenService.isBuyer" class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/cart">Korpa</a>
