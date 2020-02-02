@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.upp.upp.model.user;
+package rs.ac.uns.ftn.upp.upp.model.journal;
 
 import java.io.Serializable;
 

@@ -45,11 +45,34 @@ public class Paper implements Serializable {/**
 	
 	@Column(nullable = false, unique = true)
 	private String name;
+	
+	@Column()
+	private String coAutorName;
 
+	@Column()
+	private String coAutorEmail;
+	
+	@Column()
+	private String coAutorCity;
+	
+	@Column()
+	private String coAutorCountry;
+	
+
+	@Column(nullable = false)
+	private String keyTerms; // kljucne reci
+	
+	@Column(nullable = false)
+	private String abstractOfPaper;
+	
 	@OneToOne(targetEntity = AcademicField.class, fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "academicField_id")
 	private AcademicField academicField; // Naučna oblast u koju se rad primarno klasifikuje 
 
+
+	@Column(nullable = false)
+	private String text;	
+	
 	@JsonBackReference(value="paper")
 	@ManyToOne(fetch = FetchType.EAGER)	
 	@JoinColumn(name="journal_id", referencedColumnName="id")

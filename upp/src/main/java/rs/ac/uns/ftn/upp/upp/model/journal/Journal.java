@@ -20,7 +20,6 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.Where;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AccessLevel;
@@ -32,10 +31,8 @@ import lombok.ToString;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
 import rs.ac.uns.ftn.upp.upp.model.user.Buyer;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
-import rs.ac.uns.ftn.upp.upp.model.user.MembershipFeeMethod;
 
 @Entity
-@Where(clause="active=true")
 //Lambok annotations
 @Getter
 @Setter
@@ -70,7 +67,7 @@ public class Journal implements Serializable {
 	@Column(nullable = false)
 	private Boolean active = false;
 	
-	@Column(nullable = false)
+	@Column()
 	private Double price;
 
 	@OneToOne(targetEntity = Customer.class, fetch = FetchType.EAGER)

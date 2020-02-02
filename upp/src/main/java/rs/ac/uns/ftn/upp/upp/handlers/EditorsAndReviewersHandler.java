@@ -68,10 +68,16 @@ public class EditorsAndReviewersHandler implements TaskListener {
 				afs.addAll(journal.get().getJournalAcademicFields());
 			}
 		}
-		System.err.println("afs.size() " + afs.size());
 		
-		/////////////////////////////////////////////////////
-		
+//		Integer journalId = (Integer) delegateTask.getVariable("idCasopis");
+//		Optional<Journal> journal = journalService.findById(journalId);
+//		System.err.println("afs.size() " + afs.size());
+//		if(!journal.isPresent()) {
+//			System.err.println("nema casopisa sa id: " + journalId);
+//		}
+//		afs.addAll(journal.get().getJournalAcademicFields());
+//		/////////////////////////////////////////////////////
+//		
 		// pronalaze se editori
 		System.err.println("heeej: ");
 		Authority editorAuthority = authorityService.findByName("EDITOR");

@@ -37,6 +37,7 @@ public class JournalService {
 	}
 	
 	public Journal saveJournal(Journal journal) {
+		System.out.println("cuvamo journal");
 		return journalRepository.save(journal);
 	}
 	

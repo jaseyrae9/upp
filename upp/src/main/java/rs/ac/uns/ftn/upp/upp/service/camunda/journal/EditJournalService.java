@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.upp.upp.dto.FormSubmissionDTO;
 import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
 import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
-import rs.ac.uns.ftn.upp.upp.model.user.MembershipFeeMethod;
+import rs.ac.uns.ftn.upp.upp.model.journal.MembershipFeeMethod;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.journal.JournalService;
 
 @Service

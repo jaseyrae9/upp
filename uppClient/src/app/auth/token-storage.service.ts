@@ -20,6 +20,7 @@ export class TokenStorageService {
   public isCustomer = false;
   public isVistor = false;
   public isBuyer = false;
+  public isAuthor = false;
 
   public logggedInEmitter = this.isLoggedIn.asObservable();
   public usernameEmitter = this.username.asObservable();
@@ -76,6 +77,7 @@ export class TokenStorageService {
     this.isCustomer = false;
     this.isVistor  = false;
     this.isBuyer = false;
+    this.isAuthor = false;
     const roles = this.getRoles();
     if (roles) {
       for (const role of roles) {
@@ -93,7 +95,10 @@ export class TokenStorageService {
         }
         if ( role.authority === 'ROLE_BUYER') {
           this.isBuyer = true;
-      }
+        }
+        if ( role.authority === 'ROLE_AUTHOR') {
+          this.isAuthor = true;
+        }
       }
     } else {
       this.isVistor = true;

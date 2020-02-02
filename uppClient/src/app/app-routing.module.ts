@@ -13,6 +13,8 @@ import { AllJournalsPageComponent } from './pages/all-journals-page/all-journals
 import { JournalPageComponent } from './components/journal/journal-page/journal-page.component';
 import { AllPapersCartComponent } from './components/cart/all-papers-cart/all-papers-cart.component';
 import { AllPurchasedJournalsComponent } from './components/buyer/all-purchased-journals/all-purchased-journals.component';
+import { NewPaperComponent } from './components/autor/new-paper/new-paper.component';
+import { AllTasksComponent } from './components/autor/all-tasks/all-tasks.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginFormComponent},
@@ -25,7 +27,10 @@ const routes: Routes = [
   { path: 'addEditorsAndReviewers', component: AddEditorsAndReviewersFormComponent},
   { path: 'editJournalData', component: EditJournalDataComponent},
   { path: 'cart', component: AllPapersCartComponent},
-  { path: 'purchased', component: AllPurchasedJournalsComponent }
+  { path: 'purchased', component: AllPurchasedJournalsComponent },
+  { path: 'addPaper', component: NewPaperComponent},
+  { path: 'tasks', component: AllTasksComponent},
+
 
 ];
 

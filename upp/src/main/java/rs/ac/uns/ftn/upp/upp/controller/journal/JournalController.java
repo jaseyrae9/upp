@@ -35,7 +35,6 @@ import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
 import rs.ac.uns.ftn.upp.upp.exceptions.RequestDataException;
 import rs.ac.uns.ftn.upp.upp.exceptions.ResourceNotFoundException;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
-import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
 import rs.ac.uns.ftn.upp.upp.model.user.AuthenticationResponse;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
 import rs.ac.uns.ftn.upp.upp.security.auth.TokenUtils;
@@ -72,6 +71,7 @@ public class JournalController {
 	@Autowired
 	private JournalService journalService;
 	
+	// TODO: PROMENI DA GLEDA PO STATUSu
 	
 	/**
 	 *  Returns active objects journals. Objects contain id and name.

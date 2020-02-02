@@ -206,6 +206,7 @@ WHERE u.username = 'recenzent' AND a.name = 'matematika' AND
     NOT EXISTS (
         SELECT 2000 FROM  users_academic_fields WHERE customer_id = u.id
     );
+
 --------------------------------------------------------------------
 -- dodavanje recenzent1 korisnika
 INSERT INTO users(type, id, confirmed_mail, email, first_name, last_name, password, username, accepted_as_reviewer, active, city, country, title, wants_to_be_reviewer, journal_id, api_key) 
@@ -230,6 +231,7 @@ WHERE u.username = 'recenzent1' AND a.name = 'fizika' AND
     NOT EXISTS (
         SELECT 2001 FROM  users_academic_fields WHERE customer_id = u.id
     );
+
 --------------------------------------------------------------------
     
     -- dodavanje autor korisnika

@@ -32,13 +32,14 @@ public class PaperController {
 	
 	@Autowired
 	private OrderService orderService;
+
 	
 	@Autowired
 	private RestTemplate restTemplate;
 	
 	@Autowired
 	private BuyerService buyerService;
-	
+
 	@PreAuthorize("hasAnyRole('CUSTOMER')")
 	@RequestMapping(value="/pay", method = RequestMethod.POST, consumes = "application/json")
 	public String  makePayment(@RequestBody PaymentRequestDTO paymentRequestDTO,  Authentication authentication, HttpServletResponse httpServletResponse) throws NotFoundException {
@@ -90,4 +91,13 @@ public class PaperController {
 	
 	}
 
+
+	
+	
+	
+	
+	
+	
+	
+	
 }

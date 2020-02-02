@@ -14,6 +14,10 @@ export class PaperService {
 
   constructor(private httpClient: HttpClient) { }
 
+  chooseJournal(o, taskId) {
+    return this.httpClient.post('http://localhost:8080/author/post/'.concat(taskId), o) as Observable<any>;
+  }
+
   buyFromThisSeller(paymentRequestDTO: PaymentRequestDTO) {
     return this.httpClient.post('http://localhost:8080/paper/pay', paymentRequestDTO, {responseType: 'text'}) as Observable<any>;
   }

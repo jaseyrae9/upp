@@ -24,6 +24,9 @@ import { PaperBasicInfoComponent } from './components/journal/paper-basic-info/p
 import { AllPapersCartComponent } from './components/cart/all-papers-cart/all-papers-cart.component';
 import { PaperDetailsCartComponent } from './components/cart/paper-details-cart/paper-details-cart.component';
 import { AllPurchasedJournalsComponent } from './components/buyer/all-purchased-journals/all-purchased-journals.component';
+import { NewPaperComponent } from './components/autor/new-paper/new-paper.component';
+import { AllTasksComponent } from './components/autor/all-tasks/all-tasks.component';
+import { OneTaskComponent } from './components/autor/one-task/one-task.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +47,10 @@ import { AllPurchasedJournalsComponent } from './components/buyer/all-purchased-
     PaperBasicInfoComponent,
     AllPapersCartComponent,
     PaperDetailsCartComponent,
-    AllPurchasedJournalsComponent
+    AllPurchasedJournalsComponent,
+    NewPaperComponent,
+    AllTasksComponent,
+    OneTaskComponent
   ],
   imports: [
     BrowserModule,

@@ -13,44 +13,41 @@ import org.camunda.bpm.engine.impl.form.type.EnumFormType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import rs.ac.uns.ftn.upp.upp.model.AcademicField;
-import rs.ac.uns.ftn.upp.upp.repository.AcademicFieldRepository;
+import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
+import rs.ac.uns.ftn.upp.upp.repository.JournalRepository;
 
 @Service
-public class AcademicFieldsHandler implements TaskListener {
+public class FillAllJournalsHandler implements TaskListener {
 	
 	@Autowired
-	private AcademicFieldRepository academicFieldRepository;
+	private JournalRepository journalRepository;
 	
 	@Autowired
 	private FormService formService;
 
+	// izvlacimo usere koje postoje u bazi
 	public void notify(DelegateTask delegateTask) {
-		System.err.println("Kreiran prvi task-popunjavamo naucne oblasti");
+		System.err.println("Kreiran prvi task-popunjavamo casopise");
 
 		// za taj task daj mi formu
 		TaskFormData tfd = formService.getTaskFormData(delegateTask.getId());
 		
-		// lista form fildova i ispise u konzoli
-		System.err.println("heeej: ");
-
 		List<FormField> formFields = tfd.getFormFields();
-		System.err.println("heeej: " + formFields.size());
-		Map<String, String> items = new HashMap<>();
-		Iterable<AcademicField> academicFields = academicFieldRepository.findAll();
+		Map<String, String> itemsJournals = new HashMap<>();
+		Iterable<Journal> journals = journalRepository.findAll();
 		
 		if(!formFields.isEmpty()) {
 			System.err.println("prvi if");
 			for(FormField field : formFields) {
 				System.err.println("field " + field.getId());
-				if(field.getId().equals("naucneOblasti")) {
+				if(field.getId().equals("casopisi")) {
 					EnumFormType eft = (EnumFormType)field.getType();
-					items = eft.getValues();
-					items.clear(); // Praznimo mapu jer nekako vuce stare vrednosti
+					itemsJournals = eft.getValues();
+					itemsJournals.clear(); // Praznimo mapu jer nekako vuce stare vrednosti
 					System.err.println("drugi if");
-					for(AcademicField academicField: academicFields) {
-						System.out.println("dodato polje: " + academicField.getId() + " vrednost: " + academicField.getName());
-						items.put(academicField.getId().toString(), academicField.getName());
+					for(Journal journal: journals) {
+						System.out.println("dodato polje journal: " + journal.getId() + " vrednost: " + journal.getName());
+						itemsJournals.put(journal.getId().toString(), journal.getName());
 					}
 				}
 			}

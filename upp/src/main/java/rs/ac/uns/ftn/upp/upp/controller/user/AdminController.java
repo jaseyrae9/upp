@@ -80,8 +80,7 @@ public class AdminController {
 			TaskFormData tfd = formService.getTaskFormData(task.getId());
 			// lista form fildova i ispise u konzoli
 			List<FormField> properties = tfd.getFormFields();
-			
-			
+						
 			Integer journalId = (Integer) runtimeService.getVariable(task.getProcessInstanceId(), "idCasopis");
 			System.out.println("ID Casopisa za koga se preuzimaju polja: " + journalId);
 			

@@ -13,8 +13,8 @@ import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
 import rs.ac.uns.ftn.upp.upp.exceptions.RequestDataException;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
 import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
+import rs.ac.uns.ftn.upp.upp.model.journal.MembershipFeeMethod;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
-import rs.ac.uns.ftn.upp.upp.model.user.MembershipFeeMethod;
 import rs.ac.uns.ftn.upp.upp.model.user.security.Authority;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.AcademicFieldService;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.journal.JournalService;
@@ -89,7 +89,8 @@ public class AddJournalService implements JavaDelegate {
 		} else {
 			journal.setEditorInChief(editorInChief.get());
 			Journal savedJournal = journalService.saveJournal(journal);
-			
+			execution.setVariable("idCasopis", savedJournal.getId());
+
 			editorInChief.get().setJournal(savedJournal);
 			editorInChief.get().setAcceptedAsReviewer(true);
 			

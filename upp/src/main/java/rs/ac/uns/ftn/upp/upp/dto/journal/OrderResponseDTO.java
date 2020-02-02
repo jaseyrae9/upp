@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.upp.upp.dto.journal;
 
+import java.util.UUID;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,7 +12,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class OrderResponseDTO {
-	private Integer id;
+	private UUID id;
 	private Integer orderIdScienceCenter;
 	private Double price;
 	private String callbackUrl;
