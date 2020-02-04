@@ -3,6 +3,7 @@ import { RepositoryService } from 'src/app/services/repository.service';
 import { AdminService } from 'src/app/services/admin/admin.service';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { HttpErrorResponse } from '@angular/common/http';
+import { fakeAsync } from '@angular/core/testing';
 
 @Component({
   selector: 'app-form-details',
@@ -11,18 +12,18 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class FormDetailsComponent implements OnInit {
   @Input() taskId: string;
-  private formFieldsDto = null;
-  private formFields = [];
-  private enumKeys = [];
-  private enumValues = [];
-  private processInstance = '';
+  formFieldsDto = null;
+  formFields = [];
+  enumKeys = [];
+  enumValues = [];
+  processInstance = '';
 
-  private labels = [];
-  private names = [];
-  private enumerations = [];
-  private enumerationsValues = [];
+  labels = [];
+  names = [];
+  enumerations = [];
+  enumerationsValues = [];
   errorMessage: String = '';
-
+  isReadOnly = [];
   constructor(private repositoryService: RepositoryService,
               private adminService: AdminService) { }
 
@@ -36,6 +37,19 @@ export class FormDetailsComponent implements OnInit {
         console.log('this.formFields: ', this.formFields);
         this.processInstance = res.processInstanceId;
         this.formFields.forEach( (field) => {
+          if (field.validationConstraints.length === 0) {
+            this.isReadOnly.push(false);
+            console.log('nema constraint ', field);
+          } else {
+            field.validationConstraints.forEach((constraint) => {
+              console.log('ima constraint', field);
+
+              if (constraint.name === 'readonly') {
+                this.isReadOnly.push(true);
+              } 
+            });
+          }
+         
           if ( field.type.name === 'enum') {
             this.labels.push(field.label);
             this.names.push(field.id);
@@ -47,6 +61,8 @@ export class FormDetailsComponent implements OnInit {
 
           }
         });
+        console.log('is readonly ', this.isReadOnly);
+
       },
       (err: HttpErrorResponse) => {
         console.log('Error occured');

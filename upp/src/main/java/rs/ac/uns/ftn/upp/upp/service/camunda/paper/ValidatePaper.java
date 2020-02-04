@@ -44,30 +44,6 @@ public class ValidatePaper implements JavaDelegate {
 				}
 				
 			}
-			if (formField.getFieldId().equals("imeKoautora")) {
-				if(formField.getFieldValue().equals("")) {
-					execution.setVariable("ispravniPodaci", "false");
-				}				
-				
-			}
-			if (formField.getFieldId().equals("emailKoautora")) {
-				if(formField.getFieldValue().equals("")) {
-					execution.setVariable("ispravniPodaci", "false");
-				}				
-				
-			}
-			if (formField.getFieldId().equals("gradKoautora")) {
-				if(formField.getFieldValue().equals("")) {
-					execution.setVariable("ispravniPodaci", "false");
-				}				
-				
-			}
-			if (formField.getFieldId().equals("drzavaKoautora")) {
-				if(formField.getFieldValue().equals("")) {
-					execution.setVariable("ispravniPodaci", "false");
-				}				
-				
-			}
 			if (formField.getFieldId().equals("kljucniPojmoviRada")) {
 				if(formField.getFieldValue().equals("")) {
 					execution.setVariable("ispravniPodaci", "false");

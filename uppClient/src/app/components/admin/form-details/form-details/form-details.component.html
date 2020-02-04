@@ -16,10 +16,12 @@
                   	</ng-select -->
             </div>
 
-            <div *ngFor="let field of formFields" class="form-group">
+            <div *ngFor="let field of formFields; index as j" class="form-group">
               <label *ngIf="field.type.name != 'enum'" for="{{ field.id }}">{{field.label}}</label>
 
-              <input readonly placeholder="{{ field.label }}" type="text" name="{{ field.id }}" value="{{ field.defaultValue }}" *ngIf="field.type.name == 'string' && field.id != 'sifra'" class="form-control" />
+              <input placeholder="{{ field.label }}" type="text" name="{{ field.id }}"  *ngIf="field.type.name == 'string' && field.id != 'sifra' && isReadOnly[j]==false" ngModel class="form-control" />
+              <input readonly placeholder="{{ field.label }}" type="text" name="{{ field.id }}" value="{{ field.defaultValue }}" *ngIf="field.type.name == 'string' && field.id != 'sifra' && isReadOnly[j]==true" class="form-control" />
+
               <input readonly placeholder="{{ field.label }}" type="password" name="{{ field.id }}" *ngIf="field.type.name == 'string' && field.id == 'sifra'" class="form-control" />
 
               <div class="all-divs">

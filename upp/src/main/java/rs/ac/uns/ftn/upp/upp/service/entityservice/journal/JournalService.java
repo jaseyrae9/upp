@@ -47,7 +47,7 @@ public class JournalService {
 	public Set<JournalDTO> getJournals() {
 		System.err.println("Usao u get journals servise");
 
-		Iterable<Journal> journals = journalRepository.findAll();
+		Iterable<Journal> journals = journalRepository.findAllByActive(true);
 		
 		Set<JournalDTO> ret = new HashSet<>();
 		for (Journal journal : journals) {

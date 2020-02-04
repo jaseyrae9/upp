@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.camunda.bpm.engine.FormService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
@@ -30,13 +31,15 @@ import rs.ac.uns.ftn.upp.upp.dto.TaskDTO;
 import rs.ac.uns.ftn.upp.upp.exceptions.RequestDataException;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
 import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
+import rs.ac.uns.ftn.upp.upp.model.user.Customer;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.AcademicFieldService;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.journal.JournalService;
+import rs.ac.uns.ftn.upp.upp.service.entityservice.user.CustomerService;
 
 @Controller
 @RequestMapping("/author")
 public class AuthorController {
-	
+
 	@Autowired
 	private RuntimeService runtimeService;
 
@@ -45,13 +48,15 @@ public class AuthorController {
 
 	@Autowired
 	private FormService formService;
-	
+
 	@Autowired
 	private JournalService journalService;
-	
+
 	@Autowired
 	private AcademicFieldService academicFieldService;
 	
+	@Autowired
+	private CustomerService customerService;
 	/**
 	 * Uzimamo prvi user task iz bpmn modela i polja forme tog user taska, zatim ta
 	 * polja saljemo frontu.
@@ -62,7 +67,7 @@ public class AuthorController {
 	@GetMapping(path = "/get", produces = "application/json")
 	public @ResponseBody FormFieldsDTO get(Authentication authentication) {
 		System.err.println("U kontroleru za slanje forme za dodavanje rada");
-		//System.out.println("IME POKRETACA PROCESA: " + authentication.getName());
+		// System.out.println("IME POKRETACA PROCESA: " + authentication.getName());
 		ProcessInstance pi = runtimeService.startProcessInstanceByKey("ObradaPodnetogTeksta");
 		Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).list().get(0);
 		runtimeService.setVariable(pi.getId(), "pokretacAutor", authentication.getName());
@@ -71,15 +76,14 @@ public class AuthorController {
 		for (FormField fp : properties) {
 			System.out.println(fp.getId() + fp.getType());
 		}
-		return new FormFieldsDTO(task.getId(), pi.getId(), properties); 
+		return new FormFieldsDTO(task.getId(), pi.getId(), properties);
 	}
 
-
 	/**
-	 * Odabir casopisa endpoint, complituje se user task za izbor, klikom na dugme iz forme za izbor casopisa,
-	 * da bi nastavili dalje.
+	 * Odabir casopisa endpoint, complituje se user task za izbor, klikom na dugme
+	 * iz forme za izbor casopisa, da bi nastavili dalje.
 	 * 
-	 * @param dto podaci iz forme
+	 * @param dto    podaci iz forme
 	 * @param taskId id taska koji se submituje
 	 * @return
 	 */
@@ -90,7 +94,8 @@ public class AuthorController {
 
 		HashMap<String, Object> map = this.mapListToDto(dto);
 
-		Task task = taskService.createTaskQuery().taskId(taskId).singleResult(); // single result jer ce dati ili null ili task sa tim id-om
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult(); // single result jer ce dati ili null
+																					// ili task sa tim id-om
 		String processInstanceId = task.getProcessInstanceId(); // iz taska izvlacimo proces instance id
 		System.err.println("task name: " + task.getName());
 		System.err.println("processInstanceId: " + processInstanceId.toString());
@@ -100,38 +105,31 @@ public class AuthorController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	
-
 	/**
 	 * Prikazuje taskove koji su dodeljeni ulogovanoj osobi
 	 * 
 	 * @param processInstanceId
 	 * @return
-	 * @throws RequestDataException 
+	 * @throws RequestDataException
 	 */
 	@GetMapping(path = "/tasks", produces = "application/json")
-	public @ResponseBody ResponseEntity<List<TaskDTO>> getTasks(Authentication authentication) throws RequestDataException {
+	public @ResponseBody ResponseEntity<List<TaskDTO>> getTasks(Authentication authentication)
+			throws RequestDataException {
 		System.err.println("AUTOR: GET /tasks");
 		System.out.println("IME POKRETACA PROCESA: " + authentication.getName());
 
 		List<Task> tasks = taskService.createTaskQuery().taskAssignee(authentication.getName()).list();
-		if(tasks.isEmpty()) {
-			throw new RequestDataException("Ne postoji ni jedan zadatak");
-		}
-		else {
-			System.err.println("task.size() " + tasks.size());
-			List<TaskDTO> dtos = new ArrayList<TaskDTO>();
-			for (Task task : tasks) {
-				TaskDTO t = new TaskDTO(task.getId(), task.getName(), task.getAssignee());
-				dtos.add(t);
-			}
-			return new ResponseEntity<List<TaskDTO>>(dtos, HttpStatus.OK);
 
+		System.err.println("task.size() " + tasks.size());
+		List<TaskDTO> dtos = new ArrayList<TaskDTO>();
+		for (Task task : tasks) {
+			TaskDTO t = new TaskDTO(task.getId(), task.getName(), task.getAssignee());
+			dtos.add(t);
 		}
+		return new ResponseEntity<List<TaskDTO>>(dtos, HttpStatus.OK);
 
 	}
-	
-	
+
 	/**
 	 * Prikazuje formu za trazeni task.
 	 * 
@@ -147,7 +145,7 @@ public class AuthorController {
 			TaskFormData tfd = formService.getTaskFormData(task.getId());
 			// lista form fildova i ispise u konzoli
 			List<FormField> properties = tfd.getFormFields();
-					
+
 //			Integer journalId = (Integer) runtimeService.getVariable(task.getProcessInstanceId(), "idCasopis");
 //			System.out.println("ID Casopisa za koga se preuzimaju polja: " + journalId);
 //			
@@ -155,56 +153,68 @@ public class AuthorController {
 //				// Popunjavanje podacima
 //				fillChoosenData(properties, journalId);
 //			}
-			
+
 			for (FormField fp : properties) {
 				System.out.println(fp.getId() + fp.getType());
 			}
-			
+
 			return new FormFieldsDTO(task.getId(), task.getProcessInstanceId(), properties);
 		}
 
 		return null;
 
 	}
-	
+
 	/**
 	 * Submit formom se complete-uje zadatak i omogucava nastavak procesa.
-	 * @param dto podaci
+	 * 
+	 * @param dto    podaci
 	 * @param taskId id taska koji se submituje
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole('AUTHOR')")
+	@PreAuthorize("hasAnyRole('AUTHOR') or hasAnyRole('EDITORINCHIEF')")
 	@PostMapping(path = "/submit/{taskId}", produces = "application/json")
-	public @ResponseBody ResponseEntity<?> submit(@RequestBody List<FormSubmissionDTO> dto, @PathVariable String taskId) {
+	public @ResponseBody ResponseEntity<?> submit(@RequestBody List<FormSubmissionDTO> dto,
+			@PathVariable String taskId) {
 		System.err.println("submit endpoint: ");
 
 		HashMap<String, Object> map = this.mapListToDto(dto);
 
-		Task task = taskService.createTaskQuery().taskId(taskId).singleResult(); // single result jer ce dati ili null ili task sa tim id-om
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult(); // single result jer ce dati ili null
+																					// ili task sa tim id-om
 		System.err.println(" submit name: " + task.getName());
 		String processInstanceId = task.getProcessInstanceId(); // iz taska izvlacimo proces instance id
 		System.err.println("submit->processInstanceId: " + processInstanceId.toString());
 
-		runtimeService.setVariable(processInstanceId, "submit", dto); // u submit variablu smo stavili dto		
+		runtimeService.setVariable(processInstanceId, "submit", dto); // u submit variablu smo stavili dto
 		formService.submitTaskForm(taskId, map);
-		
+
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	
-	
 	private HashMap<String, Object> mapListToDto(List<FormSubmissionDTO> list) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		for (FormSubmissionDTO temp : list) {
 			if (temp.getFieldId().contentEquals("casopisi")) {
-					Journal journal = journalService.findByName(temp.getFieldValue().toString());
-					map.put(temp.getFieldId(), journal.getId().toString());
-			}
-			else if(temp.getFieldId().contentEquals("naucnaOblast")) {
+				Journal journal = journalService.findByName(temp.getFieldValue().toString());
+				map.put(temp.getFieldId(), journal.getId().toString());
+			} else if (temp.getFieldId().contentEquals("naucnaOblast")) {
 				AcademicField af = academicFieldService.findByName(temp.getFieldValue().toString());
 				map.put(temp.getFieldId(), af.getId().toString());
-			}
-			 else {
+			} else if (temp.getFieldValue() instanceof List) {
+				List<String> listTemp = (List<String>) temp.getFieldValue();
+				if (!listTemp.isEmpty()) {
+					System.err.println("LSITA " + temp.getFieldId());
+
+					Customer c = customerService.findByUsername(listTemp.get(0));
+					map.put(temp.getFieldId(), c.getId().toString());
+				}
+			} else if (temp.getFieldId().contentEquals("preporuka")) {
+				System.err.println("preporuka");
+				String preporuka =  StringUtils.deleteWhitespace(temp.getFieldValue().toString());
+				map.put(temp.getFieldId(), preporuka.toLowerCase());
+				
+			} else {
 				map.put(temp.getFieldId(), temp.getFieldValue());
 			}
 		}

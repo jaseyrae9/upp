@@ -1,10 +1,10 @@
-<!--div *ngIf="tasks.length == 0" >
-  <p >Trenutno ne postoji ni jedan zadatak.</p>
-</div> -->
+<div *ngIf="tasks.length == 0" class="text-center pt-2">
+  <p  style="color: #33cabb; font-size: 25px;">Trenutno ne postoji ni jedan zadatak.</p>
+</div> 
 
-<div class="text-center pt-2" *ngIf="errorMessage.length != 0" >
+<!--div class="text-center pt-2" *ngIf="errorMessage.length != 0" >
     <p  style="color: #33cabb; font-size: 25px;">{{ errorMessage }} </p>  
-</div>
+</div> -->
 
 <div class="container">
   <div  class="row justify-content-md-center" >

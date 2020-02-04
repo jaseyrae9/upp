@@ -17,15 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rs.ac.uns.ftn.upp.upp.dto.FormSubmissionDTO;
-import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
 import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
 import rs.ac.uns.ftn.upp.upp.model.user.security.Authority;
-import rs.ac.uns.ftn.upp.upp.repository.AcademicFieldRepository;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.journal.JournalService;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.user.CustomerService;
-import rs.ac.uns.ftn.upp.upp.service.entityservice.user.UserService;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.user.security.AuthorityService;
 
 @Service
@@ -33,10 +30,6 @@ public class EditorsAndReviewersHandler implements TaskListener {
 	
 	@Autowired
 	private FormService formService;
-	
-	@Autowired
-	private UserService userService;
-	
 	
 	@Autowired
 	private CustomerService customerService;

@@ -77,9 +77,21 @@
               <camunda:constraint name="readonly" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="izabraneNaucneOblasti" label="Izabrane naučne oblasti" type="enum" />
-          <camunda:formField id="izabraniUrednici" label="Izabrani urednici" type="enum" />
-          <camunda:formField id="izabraniRecenzenti" label="Izabrani recenzenti" type="enum" />
+          <camunda:formField id="izabraneNaucneOblasti" label="Izabrane naučne oblasti" type="enum">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="izabraniUrednici" label="Izabrani urednici" type="enum">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="izabraniRecenzenti" label="Izabrani recenzenti" type="enum">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
           <camunda:formField id="ispravno" label="Ukoliko su podaci ispravni, aktivirajte časopis" type="boolean" />
         </camunda:formData>
       </bpmn:extensionElements>

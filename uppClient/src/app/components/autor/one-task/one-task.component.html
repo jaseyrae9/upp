@@ -6,20 +6,25 @@
         <!-- registration form -->
         <div>
           <form #f="ngForm" (ngSubmit)="onSubmit(f.value, f)" ngNativeValidate>
-            <div *ngFor="let field of formFields" class="form-group">
+            <div *ngFor="let field of formFields; index as i" class="form-group">
               <label *ngIf="field.type.name != 'enum'" for="{{field.id}}">{{field.label}}</label>
 
-              <input placeholder="{{ field.label }}" type="text" name="{{ field.id }}" ngModel *ngIf="field.type.name == 'string' && field.id != 'sifra'" class="form-control" />
-              <input placeholder="{{ field.label }}" type="password" name="{{ field.id }}" ngModel *ngIf="field.type.name == 'string' && field.id == 'sifra'" class="form-control" />
+              <input [(ngModel)]="field.defaultValue" placeholder="{{ field.label }}" type="text" name="{{ field.id }}" *ngIf="field.type.name == 'string' && field.id != 'sifra'  && isReadOnly[i]==false" class="form-control" />
+              <input readonly value="{{ field.defaultValue }}" placeholder="{{ field.label }}" type="text" name="{{ field.id }}"  *ngIf="field.type.name == 'string' && field.id != 'sifra' && isReadOnly[i]==true" class="form-control" />
 
-              <input type="checkbox" name="{{ field.id }}" ngModel *ngIf="field.type.name == 'boolean'" class="form-control custom-box" />
-              <input placeholder="{{ field.label }}" type="number" name="{{ field.id }}" ngModel *ngIf="field.type.name == 'long'" class="form-control" />
+              <input placeholder="{{ field.label }}" type="password" name="{{ field.id }}" ngModel *ngIf="field.type.name == 'string' && field.id == 'sifra'" class="form-control" />
+              <div class="all-divs">
+                <input type="checkbox" name="{{ field.id }}" ngModel *ngIf="field.type.name == 'boolean'" class="form-control custom-box" />
+              </div>
+
+              <input placeholder="{{ field.label }}" type="number" name="{{ field.id }}" ngModel *ngIf="field.type.name == 'long' && isReadOnly[i]=='false'" class="form-control" />
+              <input readonly value="{{ field.defaultValue }}" placeholder="{{ field.label }}" type="number" name="{{ field.id }}" *ngIf="field.type.name == 'long' && isReadOnly[i]=='true'" class="form-control" />
 
             </div>
 
             <div *ngFor="let item of enumerations; index as i" class="form-group" >
               <label for="{{names[i]}}"> {{labels[i]}}</label>
-              <ng-select name="{{names[i]}}" ngModel  [searchable]="true" [items]="enumerationsValues[i]" bindValue="item" bindLabel="enumerationsValues[i]" placeholder="{{ labels[i] }}" > </ng-select>
+              <ng-select [multiple]="isMultiSelect[i]" name="{{names[i]}}" ngModel  [searchable]="true" [items]="enumerationsValues[i]" bindValue="item" bindLabel="enumerationsValues[i]" placeholder="{{ labels[i] }}" > </ng-select>
             </div>
 
             <button type="submit" class="subscribe btn btn-primary btn-block shadow-sm"> Izaberi </button>

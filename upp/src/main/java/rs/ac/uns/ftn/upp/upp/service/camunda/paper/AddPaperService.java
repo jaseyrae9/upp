@@ -35,10 +35,7 @@ public class AddPaperService implements JavaDelegate {
 	@Autowired
 	private CustomerService customerService;
 
-	@Autowired
-	private AuthorityService authorityService;
-
-	// ovo je servisni task za kreiranje casopisa, da ga sacuva u bazi
+	// ovo je servisni task za kreiranje rada, da ga sacuva u bazi
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 		System.err.println("usao u add paper service");
@@ -51,7 +48,16 @@ public class AddPaperService implements JavaDelegate {
 			System.out.println(fp.getFieldId() + " " + fp.getFieldValue());
 		}
 
+		Integer paperId = (Integer) execution.getVariable("radId");
 		Paper paper = new Paper();
+
+		if(paperId != null) {
+			Optional<Paper> paperOpt = paperService.findById(paperId);
+			if(!paperOpt.isPresent()) {
+				throw new NotFoundException(paperId, Paper.class.getSimpleName());
+			}
+			paper = paperOpt.get();
+		} 	
 
 		for (FormSubmissionDTO formField : form) {
 			if (formField.getFieldId().equals("naslovRada")) {
@@ -105,7 +111,12 @@ public class AddPaperService implements JavaDelegate {
 		paperSaved.setJournal(journal);
 		journal.getPapers().add(paperSaved);
 		journalService.saveJournal(journal);
+		
+		execution.setVariable("radId", paperSaved.getId());	
+		
 		System.err.println("izasao iz add paper service");
+		
+		
 		
 	}
 

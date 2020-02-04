@@ -21,6 +21,8 @@ export class OneTaskComponent implements OnInit {
   names = [];
   enumerations = [];
   enumerationsValues = [];
+  isReadOnly = [];
+  isMultiSelect = [];
 
 
   constructor(private authorService: AuthorService) { }
@@ -35,6 +37,21 @@ export class OneTaskComponent implements OnInit {
         this.formFields = res.formFields;
         this.processInstance = res.processInstanceId;
         this.formFields.forEach( (field) => {
+          if (field.validationConstraints.length === 0) {
+            this.isReadOnly.push(false);
+            console.log('nema constraint ', field.id);
+          }  else {
+            field.validationConstraints.forEach((constraint) => {
+              console.log('ima constraint', field.id);
+              if (constraint.name === 'readonly') {
+                console.log('ima readonly constraint', field.id);
+
+                this.isReadOnly.push(true);
+              } else {
+                this.isReadOnly.push(false);
+              }
+            });
+          }
           if ( field.type.name === 'enum') {
             this.enumKeys = Object.keys(field.type.values);
             this.enumValues = Object.values(field.type.values);
@@ -42,9 +59,21 @@ export class OneTaskComponent implements OnInit {
             this.names.push(field.id);
             this.enumerations.push(this.enumKeys);
             this.enumerationsValues.push(this.enumValues);
+            console.log('field.properties.value=', field.properties[Object.keys(field.properties)[0]]);
+            if (field.properties[Object.keys(field.properties)[0]] === 'true') {
+              this.isMultiSelect.push(true);
+              console.log('treba multiselect ', field.id);
+            } else {
+              this.isMultiSelect.push(false);
+              console.log('ne treba multiselect ', field.id);
+
+            }
           }
 
         });
+        console.log('is readonly ', this.isReadOnly);
+        console.log('is isMultiSelect ', this.isMultiSelect);
+
       },
       (err: HttpErrorResponse) => {
         console.log('Error prilikom ucitavanja formi zadataka autora');

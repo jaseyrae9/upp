@@ -22,7 +22,7 @@
           <li  class="nav-item" *ngIf="tokenService.isAuthor" routerLinkActive="active">
             <a class="nav-link" routerLink="/addPaper" style="color:#fff">Dodaj rad</a>
           </li>
-          <li  class="nav-item" *ngIf="tokenService.isAuthor" routerLinkActive="active">
+          <li  class="nav-item" *ngIf="!tokenService.isVistor && !tokenService.isBuyer" routerLinkActive="active">
             <a class="nav-link" routerLink="/tasks" style="color:#fff">Zadaci</a>
           </li>    
           <li *ngIf="tokenService.isEditorInChief" class="nav-item" routerLinkActive="active">

@@ -34,7 +34,7 @@ public class FillAllJournalsHandler implements TaskListener {
 		
 		List<FormField> formFields = tfd.getFormFields();
 		Map<String, String> itemsJournals = new HashMap<>();
-		Iterable<Journal> journals = journalRepository.findAll();
+		Iterable<Journal> journals = journalRepository.findAllByActive(true);
 		
 		if(!formFields.isEmpty()) {
 			System.err.println("prvi if");
