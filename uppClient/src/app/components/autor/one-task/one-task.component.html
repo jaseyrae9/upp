@@ -7,27 +7,54 @@
         <div>
           <form #f="ngForm" (ngSubmit)="onSubmit(f.value, f)" ngNativeValidate>
             <div *ngFor="let field of formFields; index as i" class="form-group">
-              <label *ngIf="field.type.name != 'enum'" for="{{field.id}}">{{field.label}}</label>
+              <label *ngIf="field.type.name != 'enum' && field.id!='radId'" for="{{field.id}}">{{field.label}}</label>
 
-              <input [(ngModel)]="field.defaultValue" placeholder="{{ field.label }}" type="text" name="{{ field.id }}" *ngIf="field.type.name == 'string' && field.id != 'sifra'  && isReadOnly[i]==false" class="form-control" />
-              <input readonly value="{{ field.defaultValue }}" placeholder="{{ field.label }}" type="text" name="{{ field.id }}"  *ngIf="field.type.name == 'string' && field.id != 'sifra' && isReadOnly[i]==true" class="form-control" />
+              <input [(ngModel)]="field.defaultValue" placeholder="{{ field.label }}" type="text" name="{{ field.id }}" *ngIf="field.type.name == 'string' && field.id != 'sifra' && field.id !='radId'  && isReadOnly[i]==false  && isFile[i]==false && isDownload[i]==false" class="form-control" />
+              <input readonly value="{{ field.defaultValue }}" placeholder="{{ field.label }}" type="text" name="{{ field.id }}"  *ngIf="field.type.name == 'string' && field.id != 'sifra' && isReadOnly[i]==true && field.id != 'radId'" class="form-control" />
 
               <input placeholder="{{ field.label }}" type="password" name="{{ field.id }}" ngModel *ngIf="field.type.name == 'string' && field.id == 'sifra'" class="form-control" />
               <div class="all-divs">
                 <input type="checkbox" name="{{ field.id }}" ngModel *ngIf="field.type.name == 'boolean'" class="form-control custom-box" />
               </div>
 
-              <input placeholder="{{ field.label }}" type="number" name="{{ field.id }}" ngModel *ngIf="field.type.name == 'long' && isReadOnly[i]=='false'" class="form-control" />
-              <input readonly value="{{ field.defaultValue }}" placeholder="{{ field.label }}" type="number" name="{{ field.id }}" *ngIf="field.type.name == 'long' && isReadOnly[i]=='true'" class="form-control" />
+              <input [(ngModel)]="field.defaultValue"  placeholder="{{ field.label }}" type="number" name="{{ field.id }}" ngModel *ngIf="field.type.name == 'long' && isReadOnly[i]==false && field.id != 'radId'" class="form-control" />
+              <input readonly value="{{ field.defaultValue }}" placeholder="{{ field.label }}" type="number" name="{{ field.id }}" *ngIf="field.type.name == 'long' && isReadOnly[i]==true && field.id != 'radId'" class="form-control" />
+              
+              <!--input *ngIf="isFile[i]==true" type="file" name="{{ field.id }}"   class="form-control" ngModel 
+                cam-variable-name="fileUpload"
+                cam-variable-type="File"
+                /-->
 
+               <input *ngIf="isFile[i]==true" type="file" class="form-control-file btn btn-primary p-0" name="{{field.id}}" ngModel (change)="uploadDocument($event)"> 
+              
+               <!--[href]="downloadUrl"-->
+               <a  class="btn btn-primary" (click)="download()" download *ngIf="isDownload[i]==true">Preuzmi fajl</a>
             </div>
+
 
             <div *ngFor="let item of enumerations; index as i" class="form-group" >
               <label for="{{names[i]}}"> {{labels[i]}}</label>
-              <ng-select [multiple]="isMultiSelect[i]" name="{{names[i]}}" ngModel  [searchable]="true" [items]="enumerationsValues[i]" bindValue="item" bindLabel="enumerationsValues[i]" placeholder="{{ labels[i] }}" > </ng-select>
+              <ng-select *ngIf="enumIsReadOnly[i]==false" [multiple]="isMultiSelect[i]" name="{{names[i]}}" ngModel  [searchable]="true" [items]="enumerationsValues[i]" bindValue="item" bindLabel="enumerationsValues[i]" placeholder="{{ labels[i] }}" > </ng-select>
+
+              <ng-select *ngIf="enumIsReadOnly[i]==true"  [ngModelOptions]="{standalone: true}"
+                [items]="selected[i]"
+                [disabled]="true"
+                [multiple]="true"
+                [(ngModel)]="selected[i]">
+        </ng-select>
+
             </div>
 
-            <button type="submit" class="subscribe btn btn-primary btn-block shadow-sm"> Izaberi </button>
+            <div class="text-center mb-2" *ngIf="loading" >
+              <div class="spinner-border" role="status">
+                <span class="sr-only">Učitavanje...</span>
+              </div>
+              <p class="text-detail">Sačekajte malo</p>
+      </div>
+
+            <button type="submit" class="subscribe btn btn-primary btn-block shadow-sm"> Izaberi
+              
+             </button>
             <br/>
             <div class="alert alert-danger" role="alert" *ngIf="errorMessage.length != 0" >
               {{ errorMessage }}

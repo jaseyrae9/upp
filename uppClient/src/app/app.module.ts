@@ -27,6 +27,9 @@ import { AllPurchasedJournalsComponent } from './components/buyer/all-purchased-
 import { NewPaperComponent } from './components/autor/new-paper/new-paper.component';
 import { AllTasksComponent } from './components/autor/all-tasks/all-tasks.component';
 import { OneTaskComponent } from './components/autor/one-task/one-task.component';
+import { EditionBasicInfoComponent } from './components/journal/edition-basic-info/edition-basic-info.component';
+import { AllUsersPageComponent } from './pages/all-users-page/all-users-page.component';
+import { UserBasicDetailsComponent } from './pages/user-basic-details/user-basic-details.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +53,10 @@ import { OneTaskComponent } from './components/autor/one-task/one-task.component
     AllPurchasedJournalsComponent,
     NewPaperComponent,
     AllTasksComponent,
-    OneTaskComponent
+    OneTaskComponent,
+    EditionBasicInfoComponent,
+    AllUsersPageComponent,
+    UserBasicDetailsComponent,
   ],
   imports: [
     BrowserModule,

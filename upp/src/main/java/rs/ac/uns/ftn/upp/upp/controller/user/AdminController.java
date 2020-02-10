@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.camunda.bpm.engine.FormService;
 import org.camunda.bpm.engine.RuntimeService;
@@ -16,18 +17,25 @@ import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import rs.ac.uns.ftn.upp.upp.dto.FormFieldsDTO;
 import rs.ac.uns.ftn.upp.upp.dto.TaskDTO;
+import rs.ac.uns.ftn.upp.upp.dto.user.UserDTO;
+import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
+import rs.ac.uns.ftn.upp.upp.exceptions.RequestDataException;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
 import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.journal.JournalService;
+import rs.ac.uns.ftn.upp.upp.service.entityservice.user.CustomerService;
+import rs.ac.uns.ftn.upp.upp.service.entityservice.user.security.AuthorityService;
 
 @Controller
 @RequestMapping("/admin")
@@ -44,6 +52,43 @@ public class AdminController {
 	
 	@Autowired
 	private JournalService journalService;
+	
+	@Autowired
+	private CustomerService customerService;
+
+	@Autowired
+	private AuthorityService authorityService;
+	
+	/**
+	 *  Returns users. Objects contain username, first name, last name and authority.
+	 *  users who already play the role of admin and editor should not be shown
+	 *  Users who already have the admin and editor authority shoudn't be returned.
+	 *  
+	 * @return information about users.
+	 */
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public ResponseEntity<?> getJournals() {
+		System.err.println("Usao u get users controller");
+		Set<UserDTO> ret = customerService.getUsers();
+		return new ResponseEntity<>(ret, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	@RequestMapping(value = "/makeAdmin/{id}", method = RequestMethod.POST)
+	public ResponseEntity<?> makeAdmin(@PathVariable Integer id) throws NotFoundException, RequestDataException {
+		System.err.println("Usao u makeAdmin controller");
+		Customer ret = customerService.makeAdmin(id);
+		return  new ResponseEntity<>(new UserDTO(ret), HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	@RequestMapping(value = "/makeEditor/{id}", method = RequestMethod.POST)
+	public ResponseEntity<?> makeEditor(@PathVariable Integer id) throws NotFoundException, RequestDataException {
+		System.err.println("Usao u makeEditor controller");
+		Customer ret = customerService.makeEditor(id);
+		return  new ResponseEntity<>(new UserDTO(ret), HttpStatus.OK);
+	}
 	
 	/**
 	 * Prikazuje taskove koji su dodeljeni adminu, tj. demo korisniku.

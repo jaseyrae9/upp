@@ -1,0 +1,29 @@
+<div class="col pt-3 ">
+  <div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-center "> {{user.username}}  </div>
+
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Uloge </h5>
+      <div class="card-text" *ngFor="let authority of user.authorities"  style="display:inline-block;">                
+        <span class="badge badge-pill badge-primary razmak">  {{authority.name}}  </span>
+      </div> 
+      <br/>
+      <hr/>
+      <div>
+        <div class="d-flex bd-highlight">
+          <div  *ngIf="isAdmin == false " class=" justify-content-start"><button class="btn btn-primary" (click)="makeAdmin()" >Admin</button></div>
+          <div *ngIf="isEditor == false "  class=" justify-content-end"><button class="btn btn-primary" (click)="makeEditor()">Urednik</button></div>
+        
+        
+        </div>
+        <div class="alert alert-danger mt-3" role="alert" *ngIf="errorMessage.length != 0" >
+          {{ errorMessage }}
+        </div>
+      </div>
+      
+
+    </div>
+  </div>
+</div>

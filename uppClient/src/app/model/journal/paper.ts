@@ -1,11 +1,11 @@
 import { AcademicField } from '../user/academicField';
-import { Journal } from './journal';
 import { Author } from '../user/author';
+import { Edition } from './edition';
 
 export class Paper {
     id: number;
     name: string;
     academicField: AcademicField;
-    journal: Journal;
+    edition: Edition;
     author: Author;
 }

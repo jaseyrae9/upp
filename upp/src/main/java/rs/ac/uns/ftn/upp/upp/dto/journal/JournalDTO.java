@@ -7,9 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
+import rs.ac.uns.ftn.upp.upp.model.journal.Edition;
 import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
 import rs.ac.uns.ftn.upp.upp.model.journal.MembershipFeeMethod;
-import rs.ac.uns.ftn.upp.upp.model.journal.Paper;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
 
 @Getter
@@ -31,7 +31,7 @@ public class JournalDTO {
 
 	private Customer editorInChief; // glavni urednik
 
-	private Set<PaperDTO> papers; // radovi
+	private Set<EditionDTO> editions; // izdanja
 
 	public JournalDTO(Journal journal) {
 		this.id = journal.getId();
@@ -42,11 +42,12 @@ public class JournalDTO {
 		this.membershipFeeMethod = journal.getMembershipFeeMethod();
 		this.price = journal.getPrice();
 		this.editorInChief = journal.getEditorInChief();
-		this.papers = new HashSet<>();
-		if(journal.getPapers() != null) {
-			for(Paper paper: journal.getPapers()) {
-				this.papers.add(new PaperDTO(paper));
+		this.editions = new HashSet<>();
+		if(journal.getJournalEditions() != null) {
+			for(Edition edition: journal.getJournalEditions()) {
+				this.editions.add(new EditionDTO(edition));
 			}
 		}
+
 	}
 }

@@ -2,6 +2,8 @@ package rs.ac.uns.ftn.upp.upp.security;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.camunda.bpm.engine.IdentityService;
+import org.camunda.bpm.engine.impl.IdentityServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public PasswordEncoder getEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-
+	
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -47,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().exceptionHandling()
 				.authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED)).and()
 				.authorizeRequests().antMatchers("/register/**", "/journal/all", "/journal/getJournal/{id}",
-						 "/order/*").permitAll()
+						 "/order/*", "/**").permitAll()
 				.anyRequest().authenticated().and()
 				.addFilterBefore(new AuthenticationFilter(userDetailsService), BasicAuthenticationFilter.class);
 	}

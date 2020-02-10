@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
+import rs.ac.uns.ftn.upp.upp.model.journal.Edition;
 import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
 import rs.ac.uns.ftn.upp.upp.model.journal.Paper;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
@@ -42,14 +43,15 @@ public class SystemChoosesAcademicFieldEditorService implements JavaDelegate {
 	public void execute(DelegateExecution execution) throws Exception {
 		System.err.println("usao u service za odabir urednika naucne oblasti za koju je rad prijavljen blabla");
 
-		Integer paperId = (Integer) execution.getVariable("radId");
+		Integer paperId = Integer.parseInt(String.valueOf(execution.getVariable("radId")));
 		Optional<Paper> paperOpt = paperService.findById(paperId);
 		if (!paperOpt.isPresent()) {
 			throw new NotFoundException(paperId, Paper.class.getSimpleName());
 		}
 		Paper paper = paperOpt.get();
 		AcademicField paperAcademicField = paper.getAcademicField();
-		Journal journal = paper.getJournal();
+		Edition edition = paper.getEdition(); // izdanje kojem pripada rad
+		Journal journal = edition.getJournal(); // preko izdanja kojem pripada rad dobijemo casopis
 		Customer editorInChief = journal.getEditorInChief();
 		Set<Customer> journalEditors = journal.getEditors();
 		journalEditors.remove(editorInChief);
@@ -89,7 +91,7 @@ public class SystemChoosesAcademicFieldEditorService implements JavaDelegate {
 		// TODO: skini komentar
 		Customer choosen = customerService.findByUsername(userRezultat);
 		String executionId = execution.getId();
-		// sendEmail(choosen, paper.getName(), executionId);
+		sendEmail(choosen, paper.getName(), executionId);
 		System.err.println("izasao iz servisa za odabir urednika naucne oblasti za koju je rad prijavljen blabla");
 
 
@@ -115,7 +117,7 @@ public class SystemChoosesAcademicFieldEditorService implements JavaDelegate {
 		System.err.println("usao u metodu za mejl");
 //		String choosenMail = choosen.getEmail();
 		String recipientMail = "jaseyraee9@gmail.com";
-		String subject = "Notifikacija o novom radu";
+		String subject = "Notifikacija uredniku naučne oblasti o novom radu";
 		// String confirmationUrl =
 		// "http://localhost:8080/register/confirmRegistration/" + executionId +
 		// "?token=" + token;

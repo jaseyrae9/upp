@@ -50,7 +50,8 @@ public class SendingEmailToEditorInChiefAndAuthor implements JavaDelegate {
 		// nasla glavnog urednika i sacuvala ga u variabli kako bi mogao da se koristi za dodele taskova
 		execution.setVariable("izabranGlavniUrednik", editorInChief.getUsername());
 		
-		Integer paperId = (Integer) execution.getVariable("radId");
+		Integer paperId = Integer.parseInt(String.valueOf(execution.getVariable("radId")));
+		// Integer paperId = (Integer) execution.getVariable("radId");
 		Optional<Paper> paperOpt = paperService.findById(paperId);
 		if(!paperOpt.isPresent()) {
 			throw new NotFoundException(paperId, Paper.class.getSimpleName());
@@ -62,7 +63,9 @@ public class SendingEmailToEditorInChiefAndAuthor implements JavaDelegate {
 		// poslati mejl glavnom uredniku i autoru rada 
 		// TODO: skini komentar
 
-		// sendEmail(editorInChief, author, paper.getName(), executionId);
+		sendEmail(editorInChief, author, paper.getName(), executionId);
+		Long brojKoautora = 0L;
+		execution.setVariable("brojKoautora", brojKoautora);
 		System.err.println("izasao iz servisa za odabir glavnog urednika");
 		
 	}

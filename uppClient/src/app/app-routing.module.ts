@@ -15,6 +15,7 @@ import { AllPapersCartComponent } from './components/cart/all-papers-cart/all-pa
 import { AllPurchasedJournalsComponent } from './components/buyer/all-purchased-journals/all-purchased-journals.component';
 import { NewPaperComponent } from './components/autor/new-paper/new-paper.component';
 import { AllTasksComponent } from './components/autor/all-tasks/all-tasks.component';
+import { AllUsersPageComponent } from './pages/all-users-page/all-users-page.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginFormComponent},
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'journals', component: AllJournalsPageComponent},
   { path: 'journal/:id', component: JournalPageComponent },
+
   { path: 'decide', component: SomethingComponent},
   { path: 'addJournal', component: NewJournalComponent},
   { path: 'addEditorsAndReviewers', component: AddEditorsAndReviewersFormComponent},
@@ -30,6 +32,7 @@ const routes: Routes = [
   { path: 'purchased', component: AllPurchasedJournalsComponent },
   { path: 'addPaper', component: NewPaperComponent},
   { path: 'tasks', component: AllTasksComponent},
+  { path: 'users', component: AllUsersPageComponent},
 
 
 ];

@@ -1,0 +1,36 @@
+<div *ngFor="let paper of edition.papers" >
+ 
+  <div class="col">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="d-flex">
+          <div class="p-2 flex-grow-1 "> 
+            <span style="color: #33cabb; font-weight: 600;">
+              Izdanje broj: {{ edition.number }}
+            </span>
+          </div>
+          <div class="p-2 "> 
+            <span style="color: #33cabb; font-weight: 650;">
+              $promeni
+            </span>
+          </div>
+        </div>
+  
+      </div>
+      <div class="card-body">
+        <p class="card-title"> Datum publikacije: {{edition.date.dayOfWeek}}/{{edition.date.dayOfMonth}}/{{edition.date.year}}  </p>
+       
+        <hr/> 
+        <div class="d-flex justify-content-center">
+          <p style="color: #33cabb; font-size: 23px; font-weight: 600;"> <i>Radovi</i> </p>
+
+        </div>
+        <app-paper-basic-info [paper]='paper'></app-paper-basic-info>
+  
+      </div>
+    </div>
+  </div>
+  
+
+</div>

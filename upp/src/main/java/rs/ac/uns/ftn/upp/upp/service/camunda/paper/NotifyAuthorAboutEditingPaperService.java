@@ -31,8 +31,9 @@ public class NotifyAuthorAboutEditingPaperService implements JavaDelegate {
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 		System.err.println("usao u servis za notifikaciju autora o zadatom roku za izmenu rada.");
-			
-		Integer paperId = (Integer) execution.getVariable("radId");
+		Integer paperId = Integer.parseInt(String.valueOf(execution.getVariable("radId")));
+
+		//Integer paperId = (Integer) execution.getVariable("radId");
 		Optional<Paper> paperOpt = paperService.findById(paperId);
 		if(!paperOpt.isPresent()) {
 			throw new NotFoundException(paperId, Paper.class.getSimpleName());
@@ -44,7 +45,7 @@ public class NotifyAuthorAboutEditingPaperService implements JavaDelegate {
 
 		// poslati mejl autoru rada 
 		// TODO: skini komentar
-		// sendEmail(author, paper.getName(), deadline, executionId);
+		sendEmail(author, paper.getName(), deadline, executionId);
 		System.err.println("izasao iz servisa za notifikaciju autora o zadatom roku za izmenu rada");
 		
 	}

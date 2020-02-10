@@ -51,7 +51,7 @@ public class Journal implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String name;
 
 	@Column(nullable = false, unique = true)
@@ -82,23 +82,35 @@ public class Journal implements Serializable {
 	@JoinTable(name = "journal_reviewers", joinColumns = @JoinColumn(name = "journal_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	@Getter(AccessLevel.NONE)
 	private Set<Customer> reviewers;
-		
-	@JsonManagedReference(value = "paper")
-	@OneToMany(mappedBy = "journal", fetch = FetchType.EAGER)
-	private Set<Paper> papers; // radovi
-
-	public Set<AcademicField> getJournalAcademicFields() {
-		if (academicFields == null) {
-			academicFields = new HashSet<AcademicField>();
-		}
-		return academicFields;
-	}
-
+	
 	public Set<Customer> getJournalReviewers() {
 		if (reviewers == null) {
 			reviewers = new HashSet<Customer>();
 		}
 		return reviewers;
+	}
+	
+//	@JsonManagedReference(value = "paper")
+//	@OneToMany(mappedBy = "journal", fetch = FetchType.EAGER)
+//	private Set<Paper> papers; // radovi
+	
+	@JsonManagedReference(value = "edition")
+	@OneToMany(mappedBy = "journal", fetch = FetchType.EAGER)
+	@Getter(AccessLevel.NONE)
+	private Set<Edition> editions; // izdanja casopisa, izdanje ima radove
+
+	public Set<Edition> getJournalEditions() {
+		if (editions == null) {
+			editions = new HashSet<Edition>();
+		}
+		return editions;
+	}
+	
+	public Set<AcademicField> getJournalAcademicFields() {
+		if (academicFields == null) {
+			academicFields = new HashSet<AcademicField>();
+		}
+		return academicFields;
 	}
 	
 	@ManyToMany(mappedBy = "journals", fetch = FetchType.LAZY)

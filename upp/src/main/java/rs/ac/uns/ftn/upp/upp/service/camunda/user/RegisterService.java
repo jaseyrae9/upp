@@ -101,7 +101,8 @@ public class RegisterService implements JavaDelegate {
 		}
 		
 		registerCustomer(customer, "CUSTOMER");
-		
+		registerCustomer(customer, "AUTHOR");
+
 		String executionId = execution.getId();
 		System.err.println("execution id " + executionId );
 		

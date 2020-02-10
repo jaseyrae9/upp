@@ -34,7 +34,7 @@ public class IsPaperThematicallyAcceptableService implements JavaDelegate {
 			System.out.println(fp.getFieldId() + " " + fp.getFieldValue());
 		}
 
-		Integer paperId = (Integer) execution.getVariable("radId");
+		Integer paperId = Integer.parseInt(String.valueOf(execution.getVariable("radId")));
 		Optional<Paper> paperOpt = paperService.findById(paperId);
 		if(!paperOpt.isPresent()) {
 			throw new NotFoundException(paperId, Paper.class.getSimpleName());
@@ -50,6 +50,7 @@ public class IsPaperThematicallyAcceptableService implements JavaDelegate {
 			}
 		}		
 		
+		paperService.savePaper(paper);
 		System.out.println("komenatUrednika: " + execution.getVariable("komenatUrednika"));
 		System.err.println("izasao iz servisa gde glavni urednik odlucuje da li je rad tematski prihvatljiv");
 

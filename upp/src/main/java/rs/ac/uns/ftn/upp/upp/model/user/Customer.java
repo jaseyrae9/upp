@@ -11,8 +11,10 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -21,6 +23,8 @@ import lombok.Setter;
 import lombok.ToString;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
 import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
+import rs.ac.uns.ftn.upp.upp.model.journal.Paper;
+import rs.ac.uns.ftn.upp.upp.model.journal.Review;
 
 @Entity
 @DiscriminatorValue("customer")
@@ -72,8 +76,8 @@ public class Customer extends MyUser implements Serializable {
 	
 	@ManyToMany(mappedBy = "reviewers", fetch = FetchType.LAZY)
 	@Getter(AccessLevel.NONE)
-	private Set<Journal> journals;	// Kada je recenzent
-	
+	private Set<Journal> journals;	// Kada je recenzent casopisa
+		
 	public Set<Journal> getCustomerJournals() {
 		if(journals == null) {
 			journals = new HashSet<Journal>();
@@ -81,7 +85,25 @@ public class Customer extends MyUser implements Serializable {
 		return journals;
 	}	
 	
+	@ManyToMany(mappedBy = "paperReviewers", fetch = FetchType.LAZY)
+	@Getter(AccessLevel.NONE)
+	private Set<Paper> papers;	// Kada je recenzent radova
+	
+	public Set<Paper> getReviewerPapers() {
+		if(papers == null) {
+			papers = new HashSet<Paper>();
+		}
+		return papers;
+	}		
+	
+	@JsonManagedReference(value = "customer")
+	@OneToMany(mappedBy = "reviewer", fetch = FetchType.EAGER)
+	private Set<Review> reviews; // njegove recenzije
+	
 	@Column()
 	private String api_key; // iz kp-a
+	
+	@Column()
+	private Boolean activeMembership;
 	
 }

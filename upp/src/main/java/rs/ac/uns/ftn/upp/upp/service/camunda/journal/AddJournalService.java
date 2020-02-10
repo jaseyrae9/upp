@@ -27,6 +27,9 @@ public class AddJournalService implements JavaDelegate {
 	@Autowired
 	private JournalService journalService;
 	
+//	@Autowired
+//	private	EditionService editionService;
+//	
 	@Autowired
 	private AcademicFieldService academicFieldService;
 	
@@ -87,8 +90,17 @@ public class AddJournalService implements JavaDelegate {
 			throw new RequestDataException("Ovaj urednik već ima časopis.");
 
 		} else {
-			journal.setEditorInChief(editorInChief.get());
+			journal.setEditorInChief(editorInChief.get());			
 			Journal savedJournal = journalService.saveJournal(journal);
+//			
+//			Edition edition = new Edition();
+//			edition.setDate(new DateTime()); // trenutno vreme
+//			edition.setNumber(1); // prvo izdanje
+//			edition.setJournal(savedJournal); // kom casopisu pripada
+//			edition.setPublished(false); // kad se kreira nije objavljeno
+//			Edition savedEdition = editionService.saveEdition(edition);
+//			savedJournal.getJournalEditions().add(savedEdition); // dodali prvo izdanje casopisu
+			
 			execution.setVariable("idCasopis", savedJournal.getId());
 
 			editorInChief.get().setJournal(savedJournal);

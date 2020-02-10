@@ -37,37 +37,35 @@ public class ValidatePaper implements JavaDelegate {
 			if (formField.getFieldId().equals("naslovRada")) {
 				if(formField.getFieldValue().equals("")) {
 					execution.setVariable("ispravniPodaci", "false");
-				}
-				Paper existingPaper = paperService.findByName(formField.getFieldValue().toString());
-				if (existingPaper != null) {
-					execution.setVariable("ispravniPodaci", "false");
-				}
-				
+					System.out.println("naslov nije ispravan");
+				}				
 			}
 			if (formField.getFieldId().equals("kljucniPojmoviRada")) {
 				if(formField.getFieldValue().equals("")) {
 					execution.setVariable("ispravniPodaci", "false");
+					System.out.println("kljucniPojmoviRada nije ispravan");
+
 				}				
 				
 			}
 			if (formField.getFieldId().equals("apstraktRada")) {
 				if(formField.getFieldValue().equals("")) {
 					execution.setVariable("ispravniPodaci", "false");
+					System.out.println("apstraktRada nije ispravan");
+
 				}				
 				
 			}
 			if (formField.getFieldId().equals("naucnaOblast")) {
 				if(formField.getFieldValue() == null) {
 					execution.setVariable("ispravniPodaci", "false");
+					System.out.println("naucnaOblast nije ispravan");
+
 				}				
 				
 			}
-			if (formField.getFieldId().equals("pdfTekst")) {
-				if(formField.getFieldValue().equals("")) {
-					execution.setVariable("ispravniPodaci", "false");
-				}				
-				
-			}
+			
+			
 		}
 		System.err.println("ispravniPodaci==" + execution.getVariable("ispravniPodaci"));
 	}

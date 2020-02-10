@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
+import rs.ac.uns.ftn.upp.upp.model.journal.Edition;
 import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
 import rs.ac.uns.ftn.upp.upp.model.journal.Paper;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
@@ -28,14 +29,15 @@ public class CheckingIfReviewersExistService implements JavaDelegate {
 	public void execute(DelegateExecution execution) throws Exception {
 		System.err.println("usao u service koji proverava da li postoje recenzenti naucne oblasti za koju je rad prijavljen.");
 
-		Integer paperId = (Integer) execution.getVariable("radId");
+		Integer paperId = Integer.parseInt(String.valueOf(execution.getVariable("radId")));
 		Optional<Paper> paperOpt = paperService.findById(paperId);
 		if (!paperOpt.isPresent()) {
 			throw new NotFoundException(paperId, Paper.class.getSimpleName());
 		}
 		Paper paper = paperOpt.get();
 		AcademicField paperAcademicField = paper.getAcademicField();
-		Journal journal = paper.getJournal();
+		Edition edition = paper.getEdition(); // rad priprada izdanju
+		Journal journal = edition.getJournal(); // preko izdanja saznamo kom casopisu pripada rad
 		
 		// proveriti da li postoje recenzenti i sacuvati u variablu nemaRecenzenata
 		// nemaRecenzenata == false -> ima ih

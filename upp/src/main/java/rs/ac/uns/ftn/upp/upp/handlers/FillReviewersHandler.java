@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rs.ac.uns.ftn.upp.upp.model.AcademicField;
+import rs.ac.uns.ftn.upp.upp.model.journal.Edition;
 import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
 import rs.ac.uns.ftn.upp.upp.model.journal.Paper;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
@@ -40,7 +41,9 @@ public class FillReviewersHandler implements TaskListener {
 		TaskFormData tfd = formService.getTaskFormData(delegateTask.getId());
 		// delegateTask.getVariable("pokretac")
 		List<FormField> formFields = tfd.getFormFields();
-		Integer paperId = (Integer) delegateTask.getVariable("radId");
+		Integer paperId = Integer.parseInt(String.valueOf(delegateTask.getVariable("radId")));
+
+		// Integer paperId = (Integer) delegateTask.getVariable("radId");
 		Optional<Paper> optPaper = paperService.findById(paperId);
 		if (!optPaper.isPresent()) {
 			System.err.println("nema rada sa id: " + paperId);
@@ -48,7 +51,9 @@ public class FillReviewersHandler implements TaskListener {
 		}
 		Paper paper = optPaper.get();
 		AcademicField paperAcademicField = paper.getAcademicField();
-		Journal journal = paper.getJournal();
+		Edition edition = paper.getEdition();
+		Journal journal = edition.getJournal();
+		
 		Set<Customer> journalReviewers = journal.getJournalReviewers();
 		Set<Customer> reviewers = new HashSet<>();
 		Set<String> usersList = new HashSet<>();
@@ -57,7 +62,7 @@ public class FillReviewersHandler implements TaskListener {
 			System.err.println("ne postoje recenzenti u casopisu " + journal.getName());
 			reviewers.add(editorInChief);
 			usersList.add(editorInChief.getUsername());
-			delegateTask.setVariable("usersList", usersList);
+			// delegateTask.setVariable("usersList", usersList);
 		} else {
 			System.err.println("postoje recenzenti u casopisu " + journal.getName());
 			for (Customer journalReviewer : journalReviewers) {
@@ -72,12 +77,12 @@ public class FillReviewersHandler implements TaskListener {
 					System.err.println("reviewers : " + r.getUsername());
 					usersList.add(r.getUsername());
 				}
-				delegateTask.setVariable("usersList", usersList);
+				// delegateTask.setVariable("usersList", usersList);
 			} else {
 				System.out.println("ne postoje recenzenti te naucne oblasti");
 				reviewers.add(editorInChief);
 				usersList.add(editorInChief.getUsername());
-				delegateTask.setVariable("usersList", usersList);
+				// delegateTask.setVariable("usersList", usersList);
 			}
 		}
 

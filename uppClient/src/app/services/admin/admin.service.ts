@@ -15,4 +15,16 @@ export class AdminService {
   decide(dto, taskId) {
     return this.httpClient.post('http://localhost:8080/register/decide/'.concat(taskId), dto) as Observable<any>;
   }
+
+  getAll(): Observable<any> {
+    return this.httpClient.get('http://localhost:8080/admin/all');
+  }
+
+  makeAdmin(id) {
+    return this.httpClient.post('http://localhost:8080/admin/makeAdmin/' + id, httpOptions) as Observable<any>;
+  }
+
+  makeEditor(id) {
+    return this.httpClient.post('http://localhost:8080/admin/makeEditor/'+ id, httpOptions) as Observable<any>;
+  }
 }

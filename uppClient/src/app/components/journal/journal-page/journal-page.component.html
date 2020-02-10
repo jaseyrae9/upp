@@ -35,7 +35,13 @@
   </div>
   <div class="col-md-9">
     <div class="profile-content">
-       <app-paper-basic-info *ngFor="let paper of journal.papers" [paper] = 'paper'  class="row align-items-center p-1 mt-3"></app-paper-basic-info>
+      <!--       
+        <app-paper-basic-info *ngFor="let paper of journal.papers" [paper] = 'paper'  class="row align-items-center p-1 mt-3"></app-paper-basic-info>
+-->
+        <div *ngFor="let edition of journal.editions">
+          <app-edition-basic-info  *ngIf="edition.published" [edition]='edition' ></app-edition-basic-info>
+
+        </div>
     </div>
   </div>
 </div>

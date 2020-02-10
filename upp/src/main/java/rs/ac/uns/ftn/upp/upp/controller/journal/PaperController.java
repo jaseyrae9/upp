@@ -7,9 +7,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,10 +22,12 @@ import rs.ac.uns.ftn.upp.upp.dto.journal.OrderResponseDTO;
 import rs.ac.uns.ftn.upp.upp.dto.journal.PaymentRequestDTO;
 import rs.ac.uns.ftn.upp.upp.exceptions.NotFoundException;
 import rs.ac.uns.ftn.upp.upp.model.journal.Journal;
+import rs.ac.uns.ftn.upp.upp.model.journal.Paper;
 import rs.ac.uns.ftn.upp.upp.model.order.Order;
 import rs.ac.uns.ftn.upp.upp.model.order.OrderStatus;
 import rs.ac.uns.ftn.upp.upp.model.user.Buyer;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.journal.OrderService;
+import rs.ac.uns.ftn.upp.upp.service.entityservice.journal.PaperService;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.user.BuyerService;
 
 @RestController
@@ -33,6 +37,8 @@ public class PaperController {
 	@Autowired
 	private OrderService orderService;
 
+	@Autowired
+	private PaperService paperService;
 	
 	@Autowired
 	private RestTemplate restTemplate;
@@ -89,6 +95,13 @@ public class PaperController {
 		System.out.println(responseEntity.getBody());
 		return paymentConcentratorUrl + "/choosePaymentMethod/" + merchantApiKey + "/" + responseEntity.getBody().getId();
 	
+	}
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getPaper(@PathVariable Integer id) throws NotFoundException {
+		System.err.println("contoler get paper sa id " + id);
+		Paper paper = paperService.getPaper(id);
+		return new ResponseEntity<>( new String(paper.getPaperText().getText()), HttpStatus.OK);
 	}
 
 

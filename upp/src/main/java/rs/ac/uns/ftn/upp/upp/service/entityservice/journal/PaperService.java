@@ -45,5 +45,9 @@ public class PaperService {
 	public Paper savePaper(Paper paper) {
 		return paperRepository.save(paper);
 	}
+	
+	public void deletePaperById(Integer id) {
+		paperRepository.deleteById(id);
+	}
 
 }

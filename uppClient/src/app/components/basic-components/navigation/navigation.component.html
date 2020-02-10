@@ -22,7 +22,7 @@
           <li  class="nav-item" *ngIf="tokenService.isAuthor" routerLinkActive="active">
             <a class="nav-link" routerLink="/addPaper" style="color:#fff">Dodaj rad</a>
           </li>
-          <li  class="nav-item" *ngIf="!tokenService.isVistor && !tokenService.isBuyer" routerLinkActive="active">
+          <li  class="nav-item" *ngIf="!tokenService.isVistor && !tokenService.isBuyer && !tokenService.isAdmin" routerLinkActive="active">
             <a class="nav-link" routerLink="/tasks" style="color:#fff">Zadaci</a>
           </li>    
           <li *ngIf="tokenService.isEditorInChief" class="nav-item" routerLinkActive="active">
@@ -35,6 +35,9 @@
 
 
       <ul class="nav navbar-nav navbar-right ml-auto" *ngIf="loggedIn; else notShow">
+        <li *ngIf="tokenService.isAdmin" class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/users" style="color:#fff">Korisnici</a>
+        </li>
         <li *ngIf="tokenService.isBuyer" class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/purchased" >Kupljeni</a>
         </li> 

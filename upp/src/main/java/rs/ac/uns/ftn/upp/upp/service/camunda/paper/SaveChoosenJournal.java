@@ -41,6 +41,7 @@ public class SaveChoosenJournal implements JavaDelegate {
 				Journal journal = journalService.findByName(formField.getFieldValue().toString());
 				
 				execution.setVariable("izabraniCasopisId", journal.getId());
+				execution.setVariable("izabraniCasopisNaziv", journal.getName());
 
 				if(journal.getMembershipFeeMethod() == MembershipFeeMethod.AUTHORS) {
 					// autori placaju, casopis je open-access

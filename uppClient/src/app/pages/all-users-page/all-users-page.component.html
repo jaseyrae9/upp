@@ -1,0 +1,14 @@
+<div class="container">
+   
+  <p *ngIf='users.length == 0' align="center" style="font-size: 35px; color:  #33cabb;">Ne postoje potencijalni administratori i urednici.</p>
+ 
+  <div class="container">
+    <div  class="row justify-content-md-center" >
+      <app-user-basic-details *ngFor="let user of users" [user] = 'user' class="col-md-5 col-lg-4" ></app-user-basic-details>
+
+      
+    </div>  
+  </div>
+
+
+</div>

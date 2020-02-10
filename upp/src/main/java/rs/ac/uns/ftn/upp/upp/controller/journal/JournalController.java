@@ -6,10 +6,13 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.camunda.bpm.engine.FormService;
+import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.form.FormField;
 import org.camunda.bpm.engine.form.TaskFormData;
+import org.camunda.bpm.engine.identity.Group;
+import org.camunda.bpm.engine.identity.User;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,7 @@ import rs.ac.uns.ftn.upp.upp.model.AcademicField;
 import rs.ac.uns.ftn.upp.upp.model.user.AuthenticationResponse;
 import rs.ac.uns.ftn.upp.upp.model.user.Customer;
 import rs.ac.uns.ftn.upp.upp.security.auth.TokenUtils;
+import rs.ac.uns.ftn.upp.upp.service.camunda.HelperService;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.AcademicFieldService;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.journal.JournalService;
 import rs.ac.uns.ftn.upp.upp.service.entityservice.user.CustomerService;
@@ -71,7 +75,13 @@ public class JournalController {
 	@Autowired
 	private JournalService journalService;
 	
-	// TODO: PROMENI DA GLEDA PO STATUSu
+	@Autowired
+	private IdentityService identityService;
+	
+	@Autowired
+	private HelperService helperService;
+	
+	private final static String EDITORS_GROUP_ID = "editors";
 	
 	/**
 	 *  Returns active objects journals. Objects contain id and name.
@@ -105,13 +115,20 @@ public class JournalController {
 	 * polja saljemo frontu.
 	 * 
 	 * @return formfield dto za front
+	 * @throws RequestDataException 
 	 */
-	@PreAuthorize("hasAnyRole('EDITOR')")
+	// @PreAuthorize("hasAnyRole('EDITOR')")
 	@GetMapping(path = "/get", produces = "application/json")
-	public @ResponseBody FormFieldsDTO get(Authentication authentication) {
+	public @ResponseBody FormFieldsDTO get(Authentication authentication) throws RequestDataException {
 		System.err.println("U kontroleru za slanje forme za dodavanje casopisa");
-		System.out.println("IME POKRETACA PROCESA: " + authentication.getName());
+		String pokretac = identityService.getCurrentAuthentication().getUserId();
+		System.out.println("IME POKRETACA PROCESA: " + pokretac);
 
+		boolean authorized = helperService.authorize(EDITORS_GROUP_ID);
+		if(!authorized) {
+			throw new RequestDataException("Nemate odgovarajucu ulogu");
+		}
+		
 		ProcessInstance pi = runtimeService.startProcessInstanceByKey("dodavanjeCasopisa");
 		System.err.println("casopis pii: " + pi.getProcessInstanceId());
 
@@ -120,8 +137,8 @@ public class JournalController {
 		// postavljam onog ko je pokrenuo sistem u variablu pokretac kako bi se naredni
 		// taskovi koji kao assignee imaju variablu pokretac zaista dodelili tom
 		// korisniku
-		runtimeService.setVariable(pi.getId(), "pokretac", authentication.getName());
-		task.setAssignee(authentication.getName());
+		//runtimeService.setVariable(pi.getId(), "pokretac", authentication.getName());
+		//task.setAssignee(authentication.getName());
 		// za taj task daj mi formu
 		TaskFormData tfd = formService.getTaskFormData(task.getId());
 
@@ -154,6 +171,11 @@ public class JournalController {
 			throws NotFoundException, RequestDataException {
 		System.err.println("dodavanje casopisa endpoint: ");
 
+		boolean authorized = helperService.authorize(EDITORS_GROUP_ID);
+		if(!authorized) {
+			throw new RequestDataException("Nemate odgovarajucu ulogu");
+		}
+		
 		HashMap<String, Object> map = this.mapListToDto(dto);
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		System.err.println("task name: " + task.getName());
@@ -161,7 +183,10 @@ public class JournalController {
 		String processInstanceId = task.getProcessInstanceId(); // iz taska izvlacimo proces instance id
 		System.err.println("processInstanceId: " + processInstanceId.toString());
 
-		String starter = authentication.getName();
+		String starter = identityService.getCurrentAuthentication().getUserId();
+		System.out.println("IME POKRETACA PROCESA: " + starter);
+
+		//String starter = authentication.getName();
 		Optional<Customer> opt = customerService.findCustomer(starter);
 		if (!opt.isPresent()) {
 			System.err.println("[addJournalService] nemaa korisnika imenom: " + starter);
@@ -183,9 +208,14 @@ public class JournalController {
 		// Kreiraj token
 		UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(cust.getUsername());
 		String token = this.tokenUtils.generateToken(userDetails, device);
+    	
+		User user = identityService.createUserQuery().userId(cust.getUsername()).singleResult();
+        identityService.setAuthenticatedUserId(user.getId());
+
+		List<Group> groups =  identityService.createGroupQuery().groupMember(user.getId()).list();
 
 		// Vrati token kao odgovor na uspesno autentifikaciju
-		return ResponseEntity.ok(new AuthenticationResponse(token));
+		return ResponseEntity.ok(new AuthenticationResponse(token, groups));
 	}
 
 	/**
@@ -200,9 +230,11 @@ public class JournalController {
 	public @ResponseBody FormFieldsDTO getAddEditorsAndReviewersTaskForm(Authentication authentication)
 			throws RequestDataException {
 		System.err.println("U kontroleru za slanje forme za odabir recenzenata i urednika");
-		System.out.println("2IME POKRETACA PROCESA: " + authentication.getName());
-
-		Task task = taskService.createTaskQuery().taskAssignee(authentication.getName()).singleResult();
+		// System.out.println("2IME POKRETACA PROCESA: " + authentication.getName());
+		String starter = identityService.getCurrentAuthentication().getUserId();
+		System.out.println("IME POKRETACA PROCESA: " + starter);
+		
+		Task task = taskService.createTaskQuery().taskAssignee(starter).singleResult();
 		if (task == null) {
 			System.out.println("GRESKA: null Trenutno nema taska za dodavanje urednika i recezenata");
 			throw new RequestDataException("Trenutno nema taska za dodavanje urednika i recezenata.");
@@ -215,8 +247,7 @@ public class JournalController {
 
 		System.out.println("Task name: " + task.getName());
 		System.out.println("Task id: " + task.getId());
-		System.err
-				.println("pokretacc variabla: " + runtimeService.getVariable(task.getProcessInstanceId(), "pokretac"));
+		System.err.println("pokretacc variabla: " + runtimeService.getVariable(task.getProcessInstanceId(), "pokretac"));
 
 		TaskFormData tfd = formService.getTaskFormData(task.getId());
 
@@ -236,7 +267,10 @@ public class JournalController {
 	@GetMapping(path = "/getEditJournalForm", produces = "application/json")
 	public @ResponseBody FormFieldsDTO getEditJournalForm(Authentication authentication) throws RequestDataException {
 		System.err.println("DEBUG: U kontroleru getEditJournalForm");
-		Task task = taskService.createTaskQuery().taskAssignee(authentication.getName()).singleResult();
+		String starter = identityService.getCurrentAuthentication().getUserId();
+		System.out.println("IME POKRETACA PROCESA: " + starter);
+		
+		Task task = taskService.createTaskQuery().taskAssignee(starter).singleResult();
 
 		if (task == null) {
 			System.out.println("GRESKA: null Trenutno nema taska za promenu podataka casopisa");

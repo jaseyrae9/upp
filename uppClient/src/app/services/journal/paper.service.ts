@@ -21,4 +21,8 @@ export class PaperService {
   buyFromThisSeller(paymentRequestDTO: PaymentRequestDTO) {
     return this.httpClient.post('http://localhost:8080/paper/pay', paymentRequestDTO, {responseType: 'text'}) as Observable<any>;
   }
+
+  getPaper(id): Observable<any> {
+    return this.httpClient.get('http://localhost:8080/paper/' + id, {responseType: 'text'});
+  }
 }
