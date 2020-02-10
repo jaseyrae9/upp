@@ -54,13 +54,15 @@ public class SchedulerService {
 					.variableName("izabraniCasopisId").singleResult();
 
 			DateTime date = new DateTime(one.getStartTime());
-			DateTime nextTime = date.plusYears(1);
+			DateTime nextTime = date.plusMonths(1);
+
+			//DateTime nextTime = date.plusYears(1);
 			if (nextTime.isAfterNow()) { // nije prosla godina
 				System.out.println("nije proslo godinu dana " + nextTime);
 			}
 
 			if (nextTime.isBeforeNow()) { // proslo 10 min
-				if (variable != null) {
+				if (variablePaperId != null) {
 					Integer paperId = Integer.parseInt(String.valueOf(variablePaperId.getValue()));
 					System.out.println("brise se paper id " + paperId);
 					paperService.deletePaperById(paperId);
@@ -80,7 +82,7 @@ public class SchedulerService {
 
 	
 
-	@Scheduled(fixedDelay = 60000)
+	@Scheduled(fixedDelay = 900000) // na svakih 15 min
 	public void checkOrders() {
 		System.err.println("usao u scheduler");
 		Set<Edition> editions = editionService.findAllByPublished(false); // pronalazi sve koji nisu objavljeni
